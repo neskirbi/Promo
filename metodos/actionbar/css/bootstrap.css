@@ -1,0 +1,95 @@
+body{
+  padding: 0px;
+  margin: 0px;
+}
+/* Style the list */
+ul.tab {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    border: 0px solid #fcc;
+    background-color: #f1f1f1;
+    width: 100%;
+    background:  #555555;
+}
+
+/* Float the list items side by side */
+ul.tab li {
+  float: left;
+  width: 49.5%;
+  border: 0px #000 solid;
+  text-align: center;
+  background:  #555555;
+  margin: 0px 0px 0px 0px;
+
+}
+
+
+
+/* Style the links inside the list items */
+ul.tab li a {
+    display: inline-block;
+    color: black;
+    text-align: center;
+    padding: 5px 16px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 15px;
+    color: #fff;
+    width: 72%;
+    border: 0px solid #fcc;
+}
+
+ul.tab li a.selecionar {
+    display: inline-block;
+    padding: 5px 16px;
+    text-decoration: none;
+    text-align: center;
+    transition: 0.3s;
+    font-size: 15px;
+    color: #fff;
+    width: 100%;
+    border: 0px solid #000;
+}
+
+
+/* Change background color of links on hover */
+ul.tab li a:hover {background-color: #000;}
+
+/* Create an active/current tablink class */
+ul.tab li a:focus, .active {
+  background-color:  #000;
+  border-bottom: 4px #7FB546 solid;
+  width: 75%;
+}
+
+ul.tab li a.selecionar:focus, .active {
+  background-color:  #000;
+  border-bottom: 4px #7FB546 solid;
+  width: 83%;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 0px solid #ccc;
+    border-top: none;
+}
+
+.tabcontent {
+    -webkit-animation: fadeEffect 1s;
+    animation: fadeEffect 1s; /* Fading effect takes 1 second */
+}
+
+
+@-webkit-keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeEffect {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
