@@ -1,19 +1,36 @@
 <?php
+$temp="";
+$temp2="";
+$script="";
     $title ="HeadCount | Grupo B ";
     include "head.php";
     include "sidebar.php";
 ?>
-<!----------------------------------------------------------------------------------------------------------------------------------------------------->
+
 <script language="javascript" src="users.js" type="text/javascript"></script>
 <script>
+  var cambiar="",por="";
     var tableToExcel = (function() {
   var uri = 'data:application/vnd.ms-excel;base64,'
     , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))); }
     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }); };
   return function(table, name) {
-    if (!table.nodeType) table = document.getElementById(table);
-    var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML};
+     
+    if (!table.nodeType)
+      table = document.getElementById(table);
+      
+      var acambiar=cambiar.split("#sep#");
+      var apor=por.split("#sep#");
+      var limpio=table.innerHTML;
+      console.log(acambiar);
+      console.log(apor);
+      for(var i=1;i<acambiar.length;i++){
+        //console.log(acambiar[i]+","+apor[i]);
+        limpio=limpio.replace(acambiar[i],apor[i]);
+      }
+      console.log(limpio);
+    var ctx = {worksheet: name || 'Worksheet', table: limpio};
     window.location.href = uri + base64(format(template, ctx));
   };
 })()
@@ -105,17 +122,17 @@ $i = 0;  ?>
 
 <a data-toggle="tooltip" data-placement="top" title='Autorizar Nómina'  class='btn btn-danger' onClick="setInsertarAction();" /><i class="glyphicon glyphicon-bell"></i></a>
 <a data-toggle="tooltip" data-placement="top" title='Actualizar Nómina' class='btn btn-primary' onClick="setModificarAction();" /><i class="glyphicon glyphicon-briefcase"></i></a>
-<!---input type='submit' value='Actualizar Nóminar'  name='Editar1' class='btn btn-info' data-toggle='confirmation' data-title='Proceeder con Editar?' /class="glyphicon glyphicon-send"--->
+<!--input type='submit' value='Actualizar Nóminar'  name='Editar1' class='btn btn-info' data-toggle='confirmation' data-title='Proceeder con Editar?' /class="glyphicon glyphicon-send"-->
 <a data-toggle="tooltip" data-placement="top" title='Reiniciar Incentivos' class='btn btn-warning' onClick="setCleanIncentAction();" /><i class="glyphicon glyphicon-flag"></i></a>
 
-<!---input type="button" onclick="tableToExcel('testTable', 'W3C Example Table')" value="Export to Excel"--->
+<!--input type="button" onclick="tableToExcel('testTable', 'W3C Example Table')" value="Export to Excel"-->
  <a data-toggle="tooltip" data-placement="top" title='Exportar Excel' class="btn btn-info" onclick="tableToExcel('testTable', 'W3C Example Table')"><i class="glyphicon glyphicon-folder-open"></i></a>
 
 <!-- <a data-toggle="tooltip" data-placement="top" title='Crear Usuario' class="btn btn-success" onclick="setCrearUsuarioAction()"><i class="glyphicon glyphicon-user"></i></a> -->
 
  <a data-toggle="tooltip" data-placement="top" title='Importar Incentivos' class="btn btn-info" href="excel.php"><i class="glyphicon glyphicon-save-file"></i></a>
 
- <!--- a data-toggle="tooltip" data-placement="top" title='Importar Incentivos' class="btn btn-info" onclick="setExcelAction()"><i class="glyphicon glyphicon-save-file"></i></a --->
+ <!-- a data-toggle="tooltip" data-placement="top" title='Importar Incentivos' class="btn btn-info" onclick="setExcelAction()"><i class="glyphicon glyphicon-save-file"></i></a -->
 </div>
 <form name='frmUser' method='post' action=''>    
 <table id="testTable" class="table"  >
@@ -123,34 +140,34 @@ $i = 0;  ?>
     <td >
    <table class="table jambo_table table-striped table-bordered bulk_action"  >
  <thead>
-    <!--- th class="text-center">#</th 23--->
-    <th class='text-center' style="min-width:30px" style="white-space:nowrap;"></th >
-    <th class='text-center' style="min-width:80px" style="white-space:nowrap;">No. Empleado</th> 
-    <th class='text-center' style="min-width:250px" style="white-space:nowrap;">Nombre</th>
-<th class='text-center' style="min-width:80px" style="white-space:nowrap;">Canal</th>
-<th class='text-center' style="min-width:120px" style="white-space:nowrap;">Cedis</th>
-<th class='text-center' style="min-width:150px" style="white-space:nowrap;">Puesto</th>
-<th class='text-center' style="min-width:110px" style="white-space:nowrap;">Status</th>
-<th class='text-center' style="min-width:100px" style="white-space:nowrap;">Fecha Alta</th>
-<th class='text-center' style="min-width:100px" style="white-space:nowrap;">Fecha Baja</th>
-<th class='text-center' style="min-width:80px" style="white-space:nowrap;">Sueldo Diario</th>
-<th class='text-center' style="min-width:90px" style="white-space:nowrap;">Días Trabajados</th>
-<th class='text-center' style="min-width:90px" style="white-space:nowrap;"> Dias descanso </th> 
-<th class='text-center' style="min-width:100px" style="white-space:nowrap;"> Faltas </th> 
-<th class='text-center' style="min-width:100px" style="white-space:nowrap;"> Faltas x retardos </th> 
-<th class='text-center' style="min-width:100px" style="white-space:nowrap;">Días Vacaciones</th>
-<th class='text-center' style="min-width:120px" style="white-space:nowrap;">Días Vac. Prop.</th>
-<th class='text-center' style="min-width:120px" style="white-space:nowrap;">Días Adicionales</th> 
-<th class='text-center' style="min-width:120px" style="white-space:nowrap;">Dias Desc Adic </th> 
-<th class='text-center' style="min-width:100px" style="white-space:nowrap;">Pasaje Diario</th>
-<th class='text-center' style="min-width:120px" style="white-space:nowrap;">Incentivo Sem.Act</th>
-<th class='text-center' style="min-width:100px" style="white-space:nowrap;">Incent.Perman.</th>
-<th class='text-center' style="min-width:120px" style="white-space:nowrap;">Incidencias</th>
-<th class='text-center' style="min-width:100px" style="white-space:nowrap;">Incentivo Sem1</th>
-<th class='text-center' style="min-width:100px" style="white-space:nowrap;">Incentivo Sem2</th>
-<th class='text-center' style="min-width:100px" style="white-space:nowrap;">Incentivo Sem3</th>
-<th class='text-center' style="min-width:100px" style="white-space:nowrap;">Incentivo Sem4</th>
-<th class='text-center' style="min-width:100px" style="white-space:nowrap;">Total Incentivo</th>
+    <!--- th class="text-center">#</th 23-->
+    <th class='text-center' style="min-width:30px; white-space:nowrap;"></th >
+    <th class='text-center' style="min-width:80px; white-space:nowrap;">No. Empleado</th> 
+    <th class='text-center' style="min-width:250px; white-space:nowrap;">Nombre</th>
+    <th class='text-center' style="min-width:80px; white-space:nowrap;">Canal</th>
+    <th class='text-center' style="min-width:120px; white-space:nowrap;">Cedis</th>
+    <th class='text-center' style="min-width:150px; white-space:nowrap;">Puesto</th>
+    <th class='text-center' style="min-width:110px; white-space:nowrap;">Status</th>
+    <th class='text-center' style="min-width:100px; white-space:nowrap;">Fecha Alta</th>
+    <th class='text-center' style="min-width:100px; white-space:nowrap;">Fecha Baja</th>
+    <th class='text-center' style="min-width:80px; white-space:nowrap;">Sueldo Diario</th>
+    <th class='text-center' style="min-width:90px; white-space:nowrap;">Días Trabajados</th>
+    <th class='text-center' style="min-width:90px; white-space:nowrap;"> Dias descanso </th> 
+    <th class='text-center' style="min-width:100px; white-space:nowrap;"> Faltas </th> 
+    <th class='text-center' style="min-width:100px; white-space:nowrap;"> Faltas x retardos </th> 
+    <th class='text-center' style="min-width:100px; white-space:nowrap;">Días Vacaciones</th>
+    <th class='text-center' style="min-width:120px; white-space:nowrap;">Días Vac. Prop.</th>
+    <th class='text-center' style="min-width:120px; white-space:nowrap;">Días Adicionales</th> 
+    <th class='text-center' style="min-width:120px; white-space:nowrap;">Dias Desc Adic </th> 
+    <th class='text-center' style="min-width:100px; white-space:nowrap;">Pasaje Diario</th>
+    <th class='text-center' style="min-width:120px; white-space:nowrap;">Incentivo Sem.Act</th>
+    <th class='text-center' style="min-width:100px; white-space:nowrap;">Incent.Perman.</th>
+    <th class='text-center' style="min-width:120px; white-space:nowrap;">Incidencias</th>
+    <th class='text-center' style="min-width:100px; white-space:nowrap;">Incentivo Sem1</th>
+    <th class='text-center' style="min-width:100px; white-space:nowrap;">Incentivo Sem2</th>
+    <th class='text-center' style="min-width:100px; white-space:nowrap;">Incentivo Sem3</th>
+    <th class='text-center' style="min-width:100px; white-space:nowrap;">Incentivo Sem4</th>
+    <th class='text-center' style="min-width:100px; white-space:nowrap;">Total Incentivo</th>
        </thead>
      </table>
    <td>
@@ -323,54 +340,84 @@ $dias_trabajados_ttAsist2= $dias_trabajados_ttAsist - $dias_dretardos;
 
 echo $row_cnt;
   echo '<tr>';
-   echo "<td class='text-center' style='min-width:30px' style='white-space:nowrap;'>";
+   echo "<td class='text-center' style='min-width:30px; white-space:nowrap;'>";
    if( $us_tt_promo_apellido1==='claus1') {echo "<a href=\"edit.php?id=$usuario[Id_usuario]\" class='fa fa-edit'></a> ";}
    echo    "<a href=\"tusuarioAsistencia.php?id=$usuario[Id_usuario]\" class='fa fa-bell'></a> 
          </td>"; //edit
+  $temp='<input type="hidden" name="Id_usuario['.$i.']" value="'.$usuario['Id_usuario'].'">' ;   
+  $temp2="";   
+  $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
+  echo "<td class='text-center' style='min-width:80px; white-space:nowrap;'>$NoEmpleado $temp</td>"; //no empleado
  
-  echo "<td class='text-center' style='min-width:80px' style='white-space:nowrap;'>$NoEmpleado<input type='hidden' name='Id_usuario[$i]' value='{$usuario['Id_usuario']}' /></td>"; //no empleado
- 
-  echo "<td  style='min-width:250px' style='white-space:nowrap;'>$us_nombre_real<input type='hidden' name='ucfdi[$i]' value='{$usuario['ucfdi']}' /></td>";//nombre us
-  echo "<td style='min-width:70px' style='white-space:nowrap;'>$canal_descripcion</td>";//canal
-  echo "<td style='min-width:120px' style='white-space:nowrap;'>$id_ruta</td>";//ruta
-  echo "<td style='min-width:170px' style='white-space:nowrap;'>$puesto_descripcion</td>";//puesto
-  echo "<td style='min-width:90px' style='white-space:nowrap;'>$estatus</td>";//estado
-  echo "<td class='text-center' style='min-width:100px' style='white-space:nowrap;'>$fecha_alta_us</td>"; 
-  echo "<td class='text-center' style='min-width:100px' style='white-space:nowrap;'>$fecha_baja_us</td>";
+  $temp='<input type="hidden" name="ucfdi['.$i.']" value="'.$usuario['ucfdi'].'">' ;   
+  $temp2="";   
+  $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
+  echo "<td  style='min-width:250px; white-space:nowrap;'>$us_nombre_real $temp</td>";//nombre us
+
+  echo "<td style='min-width:70px; white-space:nowrap;'>$canal_descripcion</td>";//canal
+  echo "<td style='min-width:120px; white-space:nowrap;'>$id_ruta</td>";//ruta
+  echo "<td style='min-width:170px; white-space:nowrap;'>$puesto_descripcion</td>";//puesto
+  echo "<td style='min-width:90px; white-space:nowrap;'>$estatus</td>";//estado
+  echo "<td class='text-center' style='min-width:100px; white-space:nowrap;'>$fecha_alta_us</td>"; 
+  echo "<td class='text-center' style='min-width:100px; white-space:nowrap;'>$fecha_baja_us</td>";
 ?>
-  <td class='text-center' style="min-width:80px" style="white-space:nowrap;">$<?php echo number_format($sueldo_diario, 2, ".", ","); ?></td> 
+  <td class='text-center' style="min-width:80px; white-space:nowrap;">$<?php echo number_format($sueldo_diario, 2, ".", ","); ?></td> 
 <?php
 
-echo "<td class='text-center' style='min-width:100px' style='white-space:nowrap;' ><input type='text' class='form-control' onkeypress='return /\d/.test(String.fromCharCode(((event||window.event).which||(event||window.event).which)));' name='dias_trabajados[$i]' value='$dias_trabajados_ttAsist2' /></td>";//dias trabajados
+$temp='<input type="text" class="form-control" onkeypress="return /d/.test(String.fromCharCode(((event||window.event).which||(event||window.event).which)));" name="dias_trabajados['.$i.']" value="'.$dias_trabajados_ttAsist2.'">' ;   
+$temp2="$dias_trabajados_ttAsist2";   
+$script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
+echo "<td class='text-center' style='min-width:100px; white-space:nowrap;' >$temp</td>";//dias trabajados
  ?>
-  <td class='text-center' style="min-width:90px" style="white-space:nowrap;"><?php echo number_format((($dias_trabajados_ttAsist)*(1/6)), 2, ".", ","); ?></td>
-  <!--- dias descanso ---> 
-  <td class='text-center' style="min-width:90px" style="white-space:nowrap;"><?php echo ($diaob - $dias_trabajados_ttAsist - $dias_dvac1) ; ?> </td> <!--- faltas --->
-  <td class='text-center' style="min-width:90px" style="white-space:nowrap;"><?php echo ($dias_dretardos) ; ?> </td> <!--- faltas x retardos --->
+  <td class='text-center' style="min-width:90px; white-space:nowrap;"><?php echo number_format((($dias_trabajados_ttAsist)*(1/6)), 2, ".", ","); ?></td>
+  
+  <td class='text-center' style="min-width:90px; white-space:nowrap;"><?php echo ($diaob - $dias_trabajados_ttAsist - $dias_dvac1) ; ?> </td>
+  <td class='text-center' style="min-width:90px; white-space:nowrap;"><?php echo ($dias_dretardos) ; ?> </td> 
   
   
-  <td class='text-center' style="min-width:90px" style="white-space:nowrap;"><?php echo ($dias_dvac1) ; ?> </td> <!--- dias vacaciones --->
-  <td class='text-center' style="min-width:90px" style="white-space:nowrap;"><?php echo number_format((($dias_dvac1)*(1/6)), 2, ".", ","); ?> </td> <!--- dias vacaciones Proporcional --->
+  <td class='text-center' style="min-width:90px; white-space:nowrap;"><?php echo ($dias_dvac1) ; ?> </td> 
+  <td class='text-center' style="min-width:90px; white-space:nowrap;"><?php echo number_format((($dias_dvac1)*(1/6)), 2, ".", ","); ?> </td> 
   <?php
-  
-echo "<td class='text-center' style='min-width:90px' style='white-space:nowrap;'><input type='text' class='form-control'  name='dias_ad[$i]' value='{$usuario['dias_adicionales']}' /></td>";//dias adicionales
+
+
+$temp='<input type="text" class="form-control" name="dias_ad['.$i.']" value="'.$usuario['dias_adicionales'].'">' ;   
+$temp2="$usuario[dias_adicionales]";   
+$script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';  
+echo "<td class='text-center' style='min-width:90px; white-space:nowrap;'>$temp</td>";//dias adicionales
 
 ?>
 <?php
 $tincen = ($is1 + $is2 + $is3 + $is4);
 ?>
-<td class='text-center' style="min-width:90px" style="white-space:nowrap;"><?php echo number_format($totales_adicionales, 2, ".", ","); ?> </td>
+<td class='text-center' style="min-width:90px; white-space:nowrap;"><?php echo number_format($totales_adicionales, 2, ".", ","); ?> </td>
 <?php
-echo "<td class='text-center' style='min-width:90px' style='white-space:nowrap;' ><input type='text' class='form-control' onkeypress='return /\d/.test(String.fromCharCode(((event||window.event).which||(event||window.event).which)));' name='Pasajes[$i]' value='{$usuario['Pasajes']}' /></td>";
 
-echo "<td class='text-center' style='min-width:90px' style='white-space:nowrap;' ><input type='number' class='form-control'  name='incentivon[$i]' value='{$usuario['incentivo']}' /></td>"; 
-echo "<td class='text-center' style='min-width:90px' style='white-space:nowrap;' ><input type='number' class='form-control'  name='incentivosp[$i]' value='{$usuario['incentivosp']}' /></td>"; 
-echo "<td class='text-center' style='min-width:90px' style='white-space:nowrap;' ><input type='number' class='form-control'  name='incidencia[$i]' value='{$usuario['incidencias']}' /></td>"; // pendiente pero igual mente colocar
-echo "<td style='min-width:90px' style='white-space:nowrap;'>$is1</td>";//Incentivo1
-echo "<td style='min-width:90px' style='white-space:nowrap;'>$is2</td>";//Incentivo2
-echo "<td style='min-width:90px' style='white-space:nowrap;'>$is3</td>";//Incentivo3
-echo "<td style='min-width:90px' style='white-space:nowrap;'>$is4</td>";//Incentivo4
-echo "<td style='min-width:90px' style='white-space:nowrap;'>$tincen </td>";//Incentivo1
+$temp='<input type="text" class="form-control" onkeypress="return /d/.test(String.fromCharCode(((event||window.event).which||(event||window.event).which)));" name="Pasajes[$i]" value="'.$usuario['Pasajes'].'">' ;   
+$temp2="$usuario[Pasajes]";   
+$script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
+echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' >$temp</td>";
+
+
+$temp='<input type="number" class="form-control" name="incentivon[$i]" value="'.$usuario['incentivo'].'">' ;   
+$temp2="$usuario[incentivo]";
+$script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
+echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' >$temp</td>"; 
+
+$temp='<input type="number" class="form-control" name="incentivosp['.$i.']" value="'.$usuario['incentivosp'].'">' ;   
+$temp2="$usuario[incentivosp]";
+$script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
+echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' >$temp</td>"; 
+echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' ></td>"; 
+
+$temp='<input type="number" class="form-control" name="incidencia['.$i.']" value="'.$usuario['incidencias'].'">' ;   
+$temp2="$usuario[incidencias]";
+$script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
+echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' >$temp</td>"; // pendiente pero igual mente colocar
+echo "<td style='min-width:90px; white-space:nowrap;'>$is1</td>";//Incentivo1
+echo "<td style='min-width:90px; white-space:nowrap;'>$is2</td>";//Incentivo2
+echo "<td style='min-width:90px; white-space:nowrap;'>$is3</td>";//Incentivo3
+echo "<td style='min-width:90px; white-space:nowrap;'>$is4</td>";//Incentivo4
+echo "<td style='min-width:90px; white-space:nowrap;'>$tincen </td>";//Incentivo1
  echo '</tr>';
         ++$i;
     } ?>
@@ -381,6 +428,7 @@ echo "<td style='min-width:90px' style='white-space:nowrap;'>$tincen </td>";//In
     </td>
   </tr>
 </table>
+<?php echo"<script> ".$script."</script>";?>
       </div>
       </div>
 </div>
