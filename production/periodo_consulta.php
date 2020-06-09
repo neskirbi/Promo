@@ -6,7 +6,7 @@
 ?>
 <!-----------------------------------------------------------------------------------------------------------------------------------------------------> 
 <script>
-    var tableToExcel = (function() {
+  var tableToExcel = (function() {
   var uri = 'data:application/vnd.ms-excel;base64,'
     , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
@@ -22,23 +22,31 @@
   <div class="col-md-12">
     <div class="x_title">
       <?php     
+      //print_r(count($_POST));
 //solo lo que corresponde al que se logeo ...falta moverle el id usuaro por otra cosa
 //$result = sqlsrv_query($conn, "SELECT * FROM usuario WHERE Id_usuario=".$_SESSION['Id_usuario']." ORDER BY Id_usuario DESC");
-//esta comentado alfinal parece que no se usara pero guardar por si acaso si se usa      
-$sql4 = sqlsrv_query($conn, "SELECT TOP 1 periodo FROM periodo ORDER BY idp DESC");
- if($c=sqlsrv_fetch_array($sql4)) {
-                                $ultimoPeriodo=$c['periodo'];
-                            } 
+//esta comentado alfinal parece que no se usara pero guardar por si acaso si se usa 
+if(count($_POST)==0){
+  $sql4 = sqlsrv_query($conn, "SELECT TOP 1 periodo FROM periodo ORDER BY idp DESC");
+  if($c=sqlsrv_fetch_array($sql4)) {
+    $ultimoPeriodo=$c['periodo'];
+  } 
+}else{
+ $ultimoPeriodo=$_POST['periodo'];
+}
+
+
+
 ?>  
-                                          <i class="fa fa-globe"> Nómina autorizada por el cliente.</i> <!--- Periordo. --->
-                                          <small class="pull-right">Periodo: <?php echo $ultimoPeriodo; ?>.</small>
+<i class="fa fa-globe"> Nómina autorizada por el cliente.</i> <!--- Periordo. --->
+<small class="pull-right">Periodo: <?php echo $ultimoPeriodo; ?>.</small>
     </div> 
 <?php     
 //solo lo que corresponde al que se logeo ...falta moverle el id usuaro por otra cosa
 //$result = sqlsrv_query($conn, "SELECT * FROM usuario WHERE Id_usuario=".$_SESSION['Id_usuario']." ORDER BY Id_usuario DESC");
-        $sql = "SELECT * FROM datosp where Periodo='$ultimoPeriodo' AND us_nombre_real != 'VACANTE' ORDER BY Id_usuario ASC ";
+$sql = "SELECT * FROM datosp where Periodo='$ultimoPeriodo' AND us_nombre_real != 'VACANTE' ORDER BY Id_usuario ASC ";
 //$sql = "SELECT * FROM datosp where Periodo='$ultimoPeriodo' ORDER BY Id_usuario ASC ";        
-        $result = sqlsrv_query($conn, $sql);
+$result = sqlsrv_query($conn, $sql);
 //$result = sqlsrv_query($conn, "SELECT * FROM usuario ORDER BY Id_usuario DESC");  
 ?> 
                     <section class="content invoice">
@@ -47,6 +55,22 @@ $sql4 = sqlsrv_query($conn, "SELECT TOP 1 periodo FROM periodo ORDER BY idp DESC
   <div class="row no-print">
     <div class="col-xs-12 no-print">
       <a data-toggle="tooltip" data-placement="top" title='Aprobar Nomina' class='btn btn-primary' /><i class="glyphicon glyphicon-ok"></i></a> 
+      <select id="periodos" class="form-control pull-right" style="width: 220px; " onchange="FiltaPeriodo(this);">
+
+        <?php
+        if(count($_POST)!=0){
+          echo'<option value="'.$ultimoPeriodo.'">'.$ultimoPeriodo.'</option>';
+        } 
+
+        $opt = "SELECT distinct Periodo,ultima_actualizacion FROM datosp  ORDER BY ultima_actualizacion ASC ";     
+        $opt = sqlsrv_query($conn, $opt);
+        while($options = sqlsrv_fetch_array($opt)){
+          echo'<option value="'.$options['Periodo'].'">'.$options['Periodo'].'</option>';
+        }
+
+          ?>
+      </select>
+      <a data-toggle="tooltip" data-placement="top" title="" class="btn btn-info pull-right" onclick="TableToExcel('nomina', 'W3C Example Table')" data-original-title="Exportar Excel"><i class="glyphicon glyphicon-folder-open"></i></a>
       <button data-toggle="tooltip" data-placement="top" title='Imprimir' class="btn btn-success pull-right no-print" onclick="window.print();"><i class="fa fa-print"></i></button>
  
     <!---
@@ -65,7 +89,7 @@ $sql4 = sqlsrv_query($conn, "SELECT TOP 1 periodo FROM periodo ORDER BY idp DESC
 <div>
 
               <!---table id="datatable-buttons" class="table table-striped table-bordered nowrap" cellspacing="0" width="100%"--->
-                <table  class="table table-striped jambo_table table-bordered bulk_action">
+                <table  class="table table-striped jambo_table table-bordered bulk_action" id="nomina">
                 <!--- Para Excel Custom cambiar la id por id="testTable" NOTA ES EL FILTRO O ESTO  --->
               <!--table id="myTable" class="table table-striped table-bordered"-->
                             <thead>
@@ -127,7 +151,7 @@ $diaspago=$periodo['diaspago'];
 //$idp=$periodo['idp'];
 $id_ruta=$periodo['us_nombre'];
 
-$sql1 = sqlsrv_query($conn, "select * from puesto where id=$puesto");
+$sql1 = sqlsrv_query($conn, "SELECT * from puesto where id=$puesto");
                             if($c=sqlsrv_fetch_array($sql1)) {
                                 $puesto_descripcion=$c['descripcion'];
                       
@@ -245,5 +269,43 @@ function myFunction() {
     }       
   }
 }
+
+function FiltaPeriodo(este,path="periodo_consulta.php", params, method='post') {
+
+  // The rest of this code assumes you are not using a library.
+  // It can be made less wordy if you use one.
+  const form = document.createElement('form');
+  form.method = method;
+  form.action = path;
+
+  //for (const key in params) {
+    //if (params.hasOwnProperty(key)) {
+      const hiddenField = document.createElement('input');
+      hiddenField.type = 'hidden';
+      hiddenField.name = "periodo";
+      hiddenField.value = este.value;
+
+      form.appendChild(hiddenField);
+    //}
+  //}
+
+  document.body.appendChild(form);
+  form.submit();
+}
+
+
+function TableToExcel(table, name) {
+  var uri = 'data:application/vnd.ms-excel;base64,'
+    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+    , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))); }
+    , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }); };
+   if (!table.nodeType)
+      table = document.getElementById(table);
+      
+     
+    var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML};
+    window.location.href = uri + base64(format(template, ctx));
+}
+
 </script>        
 <?php include "footer.php" ?>

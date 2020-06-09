@@ -123,7 +123,7 @@ $i = 0;  ?>
 <a data-toggle="tooltip" data-placement="top" title='Reiniciar Incentivos' class='btn btn-warning' onClick="setCleanIncentAction();" /><i class="glyphicon glyphicon-flag"></i></a>
 
 <!--input type="button" onclick="tableToExcel('testTable', 'W3C Example Table')" value="Export to Excel"-->
- <a data-toggle="tooltip" data-placement="top" title='Exportar Excel' class="btn btn-info" onclick="tableToExcel('testTable', 'W3C Example Table')"><i class="glyphicon glyphicon-folder-open"></i></a>
+ <a data-toggle="tooltip" data-placement="top" title='Exportar Excel' class="btn btn-info" onclick="tableToExcel('Personal', 'W3C Example Table')"><i class="glyphicon glyphicon-folder-open"></i></a>
 
 <!-- <a data-toggle="tooltip" data-placement="top" title='Crear Usuario' class="btn btn-success" onclick="setCrearUsuarioAction()"><i class="glyphicon glyphicon-user"></i></a> -->
 
@@ -131,8 +131,46 @@ $i = 0;  ?>
 
  <!-- a data-toggle="tooltip" data-placement="top" title='Importar Incentivos' class="btn btn-info" onclick="setExcelAction()"><i class="glyphicon glyphicon-save-file"></i></a -->
 </div>
+<br>
+<div class="pull-right">
+  <select id="puestos" class="form-control pull-right" style="width: 220px; " onchange="Buscar(this);">
+    <option value="">--Puesto--</option>
+    <?php
+
+    $opt = "SELECT distinct id,descripcion FROM puesto  ";     
+    $opt = sqlsrv_query($conn, $opt);
+    while($options = sqlsrv_fetch_array($opt)){
+      echo'<option value="'.$options['descripcion'].'">'.$options['descripcion'].'</option>';
+    }
+    ?>
+  </select>
+
+  <select id="empleados" class="form-control pull-right" style="width: 180px; " onchange="Buscar(this);">
+    <option value="">--Empleado--</option>
+    <?php
+    $opt = "SELECT distinct Id_usuario,us_nombre_real FROM usuarionom  ORDER BY us_nombre_real desc";     
+    $opt = sqlsrv_query($conn, $opt);
+    while($options = sqlsrv_fetch_array($opt)){
+      echo'<option value="'.$options['us_nombre_real'].'">'.$options['us_nombre_real'].'</option>';
+    }
+    ?>
+  </select>
+
+  <select id="cedis" class="form-control pull-right" style="width: 180px; " onchange="Buscar(this);">
+    <option value="">--cedis--</option>
+    <?php
+    $opt = "SELECT distinct us_nombre FROM usuarionom  ORDER BY us_nombre desc";     
+    $opt = sqlsrv_query($conn, $opt);
+    while($options = sqlsrv_fetch_array($opt)){
+      echo'<option value="'.$options['us_nombre'].'">'.$options['us_nombre'].'</option>';
+    }
+    ?>
+  </select>
+
+
+</div>
 <form name='frmUser' method='post' action=''>    
-<table id="testTable" class="table"  >
+<table id="Personal" class="table"  >
   <tr>
     <td >
    <table class="table jambo_table table-striped table-bordered bulk_action"  >
@@ -173,7 +211,7 @@ $i = 0;  ?>
     <td>
  <div style="width:100%; height:740px; overflow:auto;">
 
-     <table class="table">
+     <table class="table"  id="Personal_sub">
 <?php
     while ($usuario = sqlsrv_fetch_array($result)) {
 		
@@ -469,6 +507,34 @@ echo "<td style='min-width:90px; white-space:nowrap;'>$tincen </td>";//Incentivo
             document.frmUser.submit();
         }
     }
+
+  function Buscar(este) {
+
+    switch($(este).attr('id')){
+      case "puestos":
+      $('#empleados').prop('selectedIndex',0);
+      $('#cedis').prop('selectedIndex',0);
+      break;
+      case "empleados":
+      $('#puestos').prop('selectedIndex',0);
+      $('#cedis').prop('selectedIndex',0);
+      break;
+      case "cedis":
+      $('#empleados').prop('selectedIndex',0);
+      $('#puestos').prop('selectedIndex',0);
+      break;
+
+    }
+
+    $('#baba').prop('selectedIndex',0);
+
+
+    var value = $(este).val();
+    console.log(value);
+    $("#Personal_sub tr").filter(function() {
+      $(this).toggle($(this).text().indexOf(value) > -1)
+    });
+  }
 </script>
 <!-----------------------------------------------------------------------------------------------------------------------------------------------------> 
 <?php include "footer.php"; 

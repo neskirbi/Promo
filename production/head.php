@@ -27,6 +27,7 @@
 
     <title>Head count</title>
 <link rel="icon" href="images/icojti.ico" type="image/ico" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <!-- Bootstrap -->
     <link href="../vendors/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
     <!-- Font Awesome -->
