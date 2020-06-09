@@ -23,13 +23,10 @@ $script="";
       var acambiar=cambiar.split("#sep#");
       var apor=por.split("#sep#");
       var limpio=table.innerHTML;
-      console.log(acambiar);
-      console.log(apor);
       for(var i=1;i<acambiar.length;i++){
         //console.log(acambiar[i]+","+apor[i]);
-        limpio=limpio.replace(acambiar[i],apor[i]);
+        limpio=limpio.replace(acambiar[i].replace("/d/","/\\d/"),apor[i]);
       }
-      console.log(limpio);
     var ctx = {worksheet: name || 'Worksheet', table: limpio};
     window.location.href = uri + base64(format(template, ctx));
   };
@@ -364,7 +361,7 @@ echo $row_cnt;
   <td class='text-center' style="min-width:80px; white-space:nowrap;">$<?php echo number_format($sueldo_diario, 2, ".", ","); ?></td> 
 <?php
 
-$temp='<input type="text" class="form-control" onkeypress="return /d/.test(String.fromCharCode(((event||window.event).which||(event||window.event).which)));" name="dias_trabajados['.$i.']" value="'.$dias_trabajados_ttAsist2.'">' ;   
+$temp='<input type="text" class="form-control" onkeypress="return /\d/.test(String.fromCharCode(((event||window.event).which||(event||window.event).which)));" name="dias_trabajados['.$i.']" value="'.$dias_trabajados_ttAsist2.'">' ;   
 $temp2="$dias_trabajados_ttAsist2";   
 $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
 echo "<td class='text-center' style='min-width:100px; white-space:nowrap;' >$temp</td>";//dias trabajados
@@ -392,13 +389,13 @@ $tincen = ($is1 + $is2 + $is3 + $is4);
 <td class='text-center' style="min-width:90px; white-space:nowrap;"><?php echo number_format($totales_adicionales, 2, ".", ","); ?> </td>
 <?php
 
-$temp='<input type="text" class="form-control" onkeypress="return /d/.test(String.fromCharCode(((event||window.event).which||(event||window.event).which)));" name="Pasajes[$i]" value="'.$usuario['Pasajes'].'">' ;   
+$temp='<input type="text" class="form-control" onkeypress="return /\d/.test(String.fromCharCode(((event||window.event).which||(event||window.event).which)));" name="Pasajes['.$i.']" value="'.$usuario['Pasajes'].'">' ;   
 $temp2="$usuario[Pasajes]";   
 $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
 echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' >$temp</td>";
 
 
-$temp='<input type="number" class="form-control" name="incentivon[$i]" value="'.$usuario['incentivo'].'">' ;   
+$temp='<input type="number" class="form-control" name="incentivon['.$i.']" value="'.$usuario['incentivo'].'">' ;   
 $temp2="$usuario[incentivo]";
 $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
 echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' >$temp</td>"; 
@@ -406,13 +403,12 @@ echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' >$temp
 $temp='<input type="number" class="form-control" name="incentivosp['.$i.']" value="'.$usuario['incentivosp'].'">' ;   
 $temp2="$usuario[incentivosp]";
 $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
-echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' >$temp</td>"; 
-echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' ></td>"; 
+echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' >$temp</td>";
 
 $temp='<input type="number" class="form-control" name="incidencia['.$i.']" value="'.$usuario['incidencias'].'">' ;   
 $temp2="$usuario[incidencias]";
 $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
-echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' >$temp</td>"; // pendiente pero igual mente colocar
+echo "<td class='text-center' style='min-width:90px; white-space:nowrap;'>$temp</td>"; // pendiente pero igual mente colocar
 echo "<td style='min-width:90px; white-space:nowrap;'>$is1</td>";//Incentivo1
 echo "<td style='min-width:90px; white-space:nowrap;'>$is2</td>";//Incentivo2
 echo "<td style='min-width:90px; white-space:nowrap;'>$is3</td>";//Incentivo3

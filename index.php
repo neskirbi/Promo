@@ -44,7 +44,7 @@ include "controler/conn.php"; ?>
         }
         if($rows==1){
           $_SESSION['user_log'] = $username;
-          header("Location: /raul/production/main.php");
+          header("Location: production/main.php");
         
 
         }else{
