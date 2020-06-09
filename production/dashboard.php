@@ -133,7 +133,7 @@ $i = 0;  ?>
 </div>
 <br>
 <div class="pull-right">
-  <select id="puestos" class="form-control pull-right" style="width: 220px; " onchange="Buscar(this);">
+  <select id="puestos" class="form-control pull-right" style="width: 220px; margin-right: 5px;" onchange="Buscar(this);">
     <option value="">--Puesto--</option>
     <?php
 
@@ -145,7 +145,7 @@ $i = 0;  ?>
     ?>
   </select>
 
-  <select id="empleados" class="form-control pull-right" style="width: 180px; " onchange="Buscar(this);">
+  <select id="empleados" class="form-control pull-right" style="width: 180px; margin-right: 5px;" onchange="Buscar(this);">
     <option value="">--Empleado--</option>
     <?php
     $opt = "SELECT distinct Id_usuario,us_nombre_real FROM usuarionom  ORDER BY us_nombre_real desc";     
@@ -156,7 +156,7 @@ $i = 0;  ?>
     ?>
   </select>
 
-  <select id="cedis" class="form-control pull-right" style="width: 180px; " onchange="Buscar(this);">
+  <select id="cedis" class="form-control pull-right" style="width: 180px; margin-right: 5px;" onchange="Buscar(this);">
     <option value="">--cedis--</option>
     <?php
     $opt = "SELECT distinct us_nombre FROM usuarionom  ORDER BY us_nombre desc";     
