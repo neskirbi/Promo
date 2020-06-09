@@ -126,7 +126,7 @@ if($incentivo1 === ''){
 	$an = "2020";
 	$ckey1 = $ucf.$an.$peractual.$semperiodo;
   
- 	echo"<br>".$sentenciac = "SELECT idempleado, periodo, sem, incentivo, sema, ckey from incentivo where ckey='$ckey1'";
+ 	$sentenciac = "SELECT idempleado, periodo, sem, incentivo, sema, ckey from incentivo where ckey='$ckey1'";
 	$sql_s = sqlsrv_query($conn, $sentenciac);
 	sqlsrv_fetch_array($sql_s);
 	
