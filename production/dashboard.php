@@ -137,7 +137,7 @@ $i = 0;  ?>
     <option value="">--Puesto--</option>
     <?php
 
-    $opt = "SELECT distinct id,descripcion FROM puesto  ";     
+    $opt = "SELECT distinct descripcion FROM puesto  ";     
     $opt = sqlsrv_query($conn, $opt);
     while($options = sqlsrv_fetch_array($opt)){
       echo'<option value="'.$options['descripcion'].'">'.$options['descripcion'].'</option>';
@@ -148,7 +148,7 @@ $i = 0;  ?>
   <select id="empleados" class="form-control pull-right" style="width: 180px; margin-right: 5px;" onchange="Buscar(this);">
     <option value="">--Empleado--</option>
     <?php
-    $opt = "SELECT distinct Id_usuario,us_nombre_real FROM usuarionom  ORDER BY us_nombre_real desc";     
+    $opt = "SELECT distinct us_nombre_real FROM usuarionom  ORDER BY us_nombre_real desc";     
     $opt = sqlsrv_query($conn, $opt);
     while($options = sqlsrv_fetch_array($opt)){
       echo'<option value="'.$options['us_nombre_real'].'">'.$options['us_nombre_real'].'</option>';
