@@ -5,7 +5,7 @@
  * Date: 19/1/2018
  * Time: 14:48
  */
-include "../conexion/conexion.php";
+
 include "PHPExcel/Classes/PHPExcel.php";
 
 $result = odbc_exec($conexion, $query);
@@ -116,10 +116,10 @@ $objPHPExcel->getDefaultStyle()
 
 
 // Rename worksheet
-$objPHPExcel->getActiveSheet()->setTitle('Reporte de asistencia');
+$objPHPExcel->getActiveSheet()->setTitle('Documento excel');
 // Redirect output to a client’s web browser (Excel5)
 header('Content-Type: application/vnd.ms-excel');
-header('Content-Disposition: attachment;filename="Reporte asistencia.xls"');
+header('Content-Disposition: attachment;filename="Documento excel.xls"');
 header('Cache-Control: max-age=0');
 // If you're serving to IE 9, then the following may be needed
 header('Cache-Control: max-age=1');
