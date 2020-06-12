@@ -6,7 +6,7 @@
  * Time: 14:48
  */
 include "../conexion/conexion.php";
-include "exel/Classes/PHPExcel.php";
+include "PHPExcel/Classes/PHPExcel.php";
 if (isset($_GET['fecha_ini']) and isset($_GET['fecha_fin'])) {
     $fecha1 = $_GET['fecha_ini'];
     $fecha2 = $_GET['fecha_fin'];
