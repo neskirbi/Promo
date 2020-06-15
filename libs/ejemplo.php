@@ -8,9 +8,6 @@
 
 include "PHPExcel/Classes/PHPExcel.php";
 
-$result = odbc_exec($conexion, $query);
-odbc_next_result($result);
-odbc_next_result($result);
 //<editor-fold desc="Init Excel">
 // Objeto PHP Excel
 $objPHPExcel = new PHPExcel();
@@ -25,8 +22,6 @@ $objPHPExcel->getProperties()->setCreator("Raul Martinez")
     ->setCategory("Excel File");
 $activeSheet = $objPHPExcel->getActiveSheet();
 //</editor-fold>
-$fila_inicio = 8;
-$fila = $fila_inicio;      //Fila de inicio
 //<editor-fold desc="Encabezado">
 $objPHPExcel->getActiveSheet()
     ->setCellValue("B3", "PromoTécnicas y Ventas S.A. de C.V.");
@@ -36,12 +31,12 @@ $objPHPExcel->getActiveSheet()
 
 //<editor-fold desc="Encabezados">
 $objPHPExcel->getActiveSheet()
-    ->setCellValue("B" . 1, "Supervisor")
-    ->setCellValue("C" . 1, "ID-Ruta");
+    ->setCellValue("B1", "Supervisor")
+    ->setCellValue("C1", "ID-Ruta");
 
     $objPHPExcel->getActiveSheet()
-    ->setCellValue("B" . 2, "Supervisor")
-    ->setCellValue("C" . 2, "ID-Ruta");
+    ->setCellValue("B2", "Supervisor")
+    ->setCellValue("C2", "ID-Ruta");
 
 //$columna = PHPExcel_Cell::columnIndexFromString('H'); //Devuelve el numero de columna de esa letra
 
@@ -107,13 +102,14 @@ $objPHPExcel->getActiveSheet()->getStyle('A' . ($fila_inicio) . ':' . $letra . $
 
 
 //Centrar texto
+/*
 $objPHPExcel->getDefaultStyle()
     ->getAlignment()
     ->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
 $objPHPExcel->getDefaultStyle()
     ->getAlignment()
     ->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-
+*/
 
 // Rename worksheet
 $objPHPExcel->getActiveSheet()->setTitle('Documento excel');

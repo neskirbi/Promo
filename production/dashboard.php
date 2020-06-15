@@ -34,18 +34,18 @@ $script="";
 </script>
 
       <?php     
-	     session_start();        
+       session_start();        
          $id= $_SESSION['user_log']; 
-	 // echo $id;
-	// $dias = array("domingo","lunes","martes","miercoles","jueves","viernes","sabado");
-	 //echo "Hoy es es ".$dias[date("w")];
-	 
+   // echo $id;
+  // $dias = array("domingo","lunes","martes","miercoles","jueves","viernes","sabado");
+   //echo "Hoy es es ".$dias[date("w")];
+   
 //solo lo que corresponde al que se logeo ...falta moverle el id usuaro por otra cosa
 $resultusu = sqlsrv_query($conn, "SELECT * FROM usuaripsPromo WHERE nombre='$id'");
-	
-	if($c=sqlsrv_fetch_array($resultusu)) 
-	{
-            $zonausu=$c['zona'];							
+  
+  if($c=sqlsrv_fetch_array($resultusu)) 
+  {
+            $zonausu=$c['zona'];              
     } 
 
 $timestamp = mktime(0, 0, 0, date('n') - 1, 21);
@@ -55,26 +55,26 @@ $lastday = date('Y/m/t',strtotime('last month'));
 $sql4 = sqlsrv_query($conn, "SELECT TOP 1 periodo, period, sem FROM periodo ORDER BY idp DESC");
  if($c=sqlsrv_fetch_array($sql4)) {
                                 $ultimoPeriodo=$c['periodo'];
-								$peractual=$c['period'];
-								$semperiodo=$c['sem'];
-								
-							$varcompa = "2020".$peractual."-".$semperiodo;
+                $peractual=$c['period'];
+                $semperiodo=$c['sem'];
+                
+              $varcompa = "2020".$peractual."-".$semperiodo;
                       
                             } 
 
 $sql6 = sqlsrv_query($conn, "SELECT idempleado, pano, periodo, sem, incentivo, sema, ckey  FROM incentivo where periodo=$peractual and sem=$semperiodo");
-	if($c=sqlsrv_fetch_array($sql6))
+  if($c=sqlsrv_fetch_array($sql6))
          {
              $inc_idemp=$c['idempleado'];
-			 $inc_pano=$c['pano'];
-			 $inc_periodo=$c['periodo'];
-			 $inc_periodo=$c['sem'];
-			 $inc_periodo=$c['incentivo'];
-			 $inc_periodo=$c['sema'];
-			 $inc_periodo=$c['ckey'];
-         } 							
-							
-							
+       $inc_pano=$c['pano'];
+       $inc_periodo=$c['periodo'];
+       $inc_periodo=$c['sem'];
+       $inc_periodo=$c['incentivo'];
+       $inc_periodo=$c['sema'];
+       $inc_periodo=$c['ckey'];
+         }              
+              
+              
 ?>
 <?php
 $dateTimeVariable = date("j-m-Y ");
@@ -99,7 +99,7 @@ $dateTimeVariable = date("j-m-Y ");
  $sql_periodo_inicial = sqlsrv_query($conn, "SELECT top 1 diasp FROM periodo order by diasp DESC");
    if($t_periodo_c=sqlsrv_fetch_array($sql_periodo_inicial)) {
                                 $t_perido_diap=$t_periodo_c['diasp'];
-                            }   							
+                            }                 
   //echo $t_perido_diai ; 
   //echo $t_perido_diaf ;                          
 ?>
@@ -107,8 +107,8 @@ $dateTimeVariable = date("j-m-Y ");
     <div class="row">
 <?php 
         //$sql = "SELECT * FROM usuarionom where gafete='B' and dni in ('".str_replace(",","','",$zonausu)."') ORDER BY canal,us_apellidos,puesto ASC";  //aqui esta la consulta por bloque
-        $sql = "SELECT * FROM usuarionom u LEFT OUTER JOIN incentivo ic on ic.idempleado = u.ucfdi where u.gafete='B' and u.dni in ('".str_replace(",","','",$zonausu)."') and ic.sema = '$varcompa' or (ic.periodo + ic.sem) is NULL ORDER BY canal,us_apellidos,puesto ASC";  //aqui esta la consulta por bloque		
-		$result = sqlsrv_query($conn, $sql);
+        $sql = "SELECT * FROM usuarionom u LEFT OUTER JOIN incentivo ic on ic.idempleado = u.ucfdi where u.gafete='B' and u.dni in ('".str_replace(",","','",$zonausu)."') and ic.sema = '$varcompa' or (ic.periodo + ic.sem) is NULL ORDER BY canal,us_apellidos,puesto ASC";  //aqui esta la consulta por bloque    
+    $result = sqlsrv_query($conn, $sql);
 $i = 0;  ?>
 
     <a data-toggle="tooltip" data-placement="top" title='Borrar Ultima Nomina Generada' class='btn btn-danger' onclick="setBorrarNominaAction();" /><i class="glyphicon glyphicon-alert"></i></a> 
@@ -175,34 +175,33 @@ $i = 0;  ?>
     <td >
    <table class="table jambo_table table-striped table-bordered bulk_action"  >
  <thead>
-    <!--- th class="text-center">#</th 23-->
-    <th class='text-center' style="min-width:30px; white-space:nowrap;"></th >
-    <th class='text-center' style="min-width:80px; white-space:nowrap;">No. Empleado</th> 
-    <th class='text-center' style="min-width:250px; white-space:nowrap;">Nombre</th>
-    <th class='text-center' style="min-width:80px; white-space:nowrap;">Canal</th>
-    <th class='text-center' style="min-width:120px; white-space:nowrap;">Cedis</th>
-    <th class='text-center' style="min-width:150px; white-space:nowrap;">Puesto</th>
-    <th class='text-center' style="min-width:110px; white-space:nowrap;">Status</th>
-    <th class='text-center' style="min-width:100px; white-space:nowrap;">Fecha Alta</th>
-    <th class='text-center' style="min-width:100px; white-space:nowrap;">Fecha Baja</th>
-    <th class='text-center' style="min-width:80px; white-space:nowrap;">Sueldo Diario</th>
-    <th class='text-center' style="min-width:90px; white-space:nowrap;">Días Trabajados</th>
-    <th class='text-center' style="min-width:90px; white-space:nowrap;"> Dias descanso </th> 
-    <th class='text-center' style="min-width:100px; white-space:nowrap;"> Faltas </th> 
-    <th class='text-center' style="min-width:100px; white-space:nowrap;"> Faltas x retardos </th> 
-    <th class='text-center' style="min-width:100px; white-space:nowrap;">Días Vacaciones</th>
-    <th class='text-center' style="min-width:120px; white-space:nowrap;">Días Vac. Prop.</th>
-    <th class='text-center' style="min-width:120px; white-space:nowrap;">Días Adicionales</th> 
-    <th class='text-center' style="min-width:120px; white-space:nowrap;">Dias Desc Adic </th> 
-    <th class='text-center' style="min-width:100px; white-space:nowrap;">Pasaje Diario</th>
-    <th class='text-center' style="min-width:120px; white-space:nowrap;">Incentivo Sem.Act</th>
-    <th class='text-center' style="min-width:100px; white-space:nowrap;">Incent.Perman.</th>
-    <th class='text-center' style="min-width:120px; white-space:nowrap;">Incidencias</th>
-    <th class='text-center' style="min-width:100px; white-space:nowrap;">Incentivo Sem1</th>
-    <th class='text-center' style="min-width:100px; white-space:nowrap;">Incentivo Sem2</th>
-    <th class='text-center' style="min-width:100px; white-space:nowrap;">Incentivo Sem3</th>
-    <th class='text-center' style="min-width:100px; white-space:nowrap;">Incentivo Sem4</th>
-    <th class='text-center' style="min-width:100px; white-space:nowrap;">Total Incentivo</th>
+    <th style=" min-width: 60px;"><font style="color: #fff;" size="2" ></font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:80px; "><font style="color: #fff;" size="2" >No. Empleado</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:250px; "><font style="color: #fff;" size="2" >Nombre</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:80px; "><font style="color: #fff;" size="2" >Canal</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:120px; "><font style="color: #fff;" size="2" >Cedis</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:150px; "><font style="color: #fff;" size="2" >Puesto</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:110px; "><font style="color: #fff;" size="2" >Status</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:100px; "><font style="color: #fff;" size="2" >Fecha Alta</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:100px; "><font style="color: #fff;" size="2" >Fecha Baja</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:80px; "><font style="color: #fff;" size="2" >Sueldo Diario</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:90px; "><font style="color: #fff;" size="2" >Días Trabajados</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:90px; "><font style="color: #fff;" size="2" > Dias descanso </font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:100px; "><font style="color: #fff;" size="2" > Faltas </font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:100px; "><font style="color: #fff;" size="2" > Faltas x retardos </font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:100px; "><font style="color: #fff;" size="2" >Días Vacaciones</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:120px; "><font style="color: #fff;" size="2" >Días Vac. Prop.</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:120px; "><font style="color: #fff;" size="2" >Días Adicionales</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:120px; "><font style="color: #fff;" size="2" >Dias Desc Adic </font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:100px; "><font style="color: #fff;" size="2" >Pasaje Diario</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:120px; "><font style="color: #fff;" size="2" >Incentivo Sem.Act</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:100px; "><font style="color: #fff;" size="2" >Incent.Perman.</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:120px; "><font style="color: #fff;" size="2" >Incidencias</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:100px; "><font style="color: #fff;" size="2" >Incentivo Sem1</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:100px; "><font style="color: #fff;" size="2" >Incentivo Sem2</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:100px; "><font style="color: #fff;" size="2" >Incentivo Sem3</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:100px; "><font style="color: #fff;" size="2" >Incentivo Sem4</font></th>
+    <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:100px; "><font style="color: #fff;" size="2" >Total Incentivo</font></th>
        </thead>
      </table>
    <td>
@@ -214,7 +213,7 @@ $i = 0;  ?>
      <table class="table"  id="Personal_sub">
 <?php
     while ($usuario = sqlsrv_fetch_array($result)) {
-		
+    
  // $idusuario=$usuario['id'];
   $foto=$usuario['foto'];
   $us_nombre_real= utf8_encode($usuario['us_nombre_real']);
@@ -265,7 +264,7 @@ $sql_canal = sqlsrv_query($conn, "select * from canal where id=$canal");
                             if($c=sqlsrv_fetch_array($sql_canal)) {
                                 $canal_descripcion=$c['descripcion'];
                             } 
-							
+              
 $sql_periodo = sqlsrv_query($conn, "SELECT TOP 1 periodo FROM periodo ORDER BY idp DESC");
  if($a=sqlsrv_fetch_array($sql_periodo)) {
                                 $ultimoPeriodo=$a['periodo'];
@@ -277,8 +276,8 @@ $sql_asistencia = sqlsrv_query($conn, "SELECT asistencia from asistencia where i
                                 $asistencias_asistidas=$d['id_app'];
                             }  
 
-							
-	//dias asistencia						
+              
+  //dias asistencia           
 $sql_asistencia2 = "SELECT * FROM asistencia where id_usuario=$Id_usuario and fecha >= '$fecha1' and fecha <= '$fecha2' and asistencia = '1'";
 $sql_asistencia_asistidas2 = "SELECT * FROM asistencia where id_usuario= $Id_usuario and asistencia = '1' and fecha between '$fecha1' and '$fecha2'";
 
@@ -375,84 +374,82 @@ $dias_trabajados_ttAsist2= $dias_trabajados_ttAsist - $dias_dretardos;
 
 echo $row_cnt;
   echo '<tr>';
-   echo "<td class='text-center' style='min-width:30px; white-space:nowrap;'>";
-   if( $us_tt_promo_apellido1==='claus1') {echo "<a href=\"edit.php?id=$usuario[Id_usuario]\" class='fa fa-edit'></a> ";}
-   echo    "<a href=\"tusuarioAsistencia.php?id=$usuario[Id_usuario]\" class='fa fa-bell'></a> 
-         </td>"; //edit
+   echo '<td style="text-align: center; min-width: 60px;">';
+   if( $us_tt_promo_apellido1==='claus1') {
+    echo "<a href=\"edit.php?id=$usuario[Id_usuario]\" class='fa fa-edit'></a> ";
+  }
+  echo "<a href=\"tusuarioAsistencia.php?id=$usuario[Id_usuario]\" class='fa fa-bell'></a></td>"; //edit
   $temp='<input type="hidden" name="Id_usuario['.$i.']" value="'.$usuario['Id_usuario'].'">' ;   
   $temp2="";   
   $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
-  echo "<td class='text-center' style='min-width:80px; white-space:nowrap;'>$NoEmpleado $temp</td>"; //no empleado
+  echo '<td style="text-align: center; min-width: 80px;">'.$NoEmpleado.$temp.' </td>'; //no empleado
  
   $temp='<input type="hidden" name="ucfdi['.$i.']" value="'.$usuario['ucfdi'].'">' ;   
   $temp2="";   
   $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
-  echo "<td  style='min-width:250px; white-space:nowrap;'>$us_nombre_real $temp</td>";//nombre us
+  echo '<td  style="text-align: center; min-width: 250px;">'.$us_nombre_real.$temp.' </td>';//nombre us
 
-  echo "<td style='min-width:70px; white-space:nowrap;'>$canal_descripcion</td>";//canal
-  echo "<td style='min-width:120px; white-space:nowrap;'>$id_ruta</td>";//ruta
-  echo "<td style='min-width:170px; white-space:nowrap;'>$puesto_descripcion</td>";//puesto
-  echo "<td style='min-width:90px; white-space:nowrap;'>$estatus</td>";//estado
-  echo "<td class='text-center' style='min-width:100px; white-space:nowrap;'>$fecha_alta_us</td>"; 
-  echo "<td class='text-center' style='min-width:100px; white-space:nowrap;'>$fecha_baja_us</td>";
+  echo '<td style="text-align: center; min-width: 80px;">'.$canal_descripcion.'</td>';//canal
+  echo '<td style="text-align: center; min-width: 120px;">'.$id_ruta.'</td>';//ruta
+  echo '<td style="text-align: center; min-width: 150px;">'.$puesto_descripcion.'</td>';//puesto
+  echo '<td style="text-align: center; min-width: 110px;">'.$estatus.'</td>';//estado
+  echo '<td style="text-align: center; min-width: 100px;">'.$fecha_alta_us.'</td>'; 
+  echo '<td style="text-align: center; min-width: 100px;">'.$fecha_baja_us.'</td>';
 ?>
-  <td class='text-center' style="min-width:80px; white-space:nowrap;">$<?php echo number_format($sueldo_diario, 2, ".", ","); ?></td> 
+  <td style="text-align: center; min-width: 80px;">$<?php echo number_format($sueldo_diario, 2, ".", ","); ?></td> 
 <?php
 
 $temp='<input type="text" class="form-control" onkeypress="return /\d/.test(String.fromCharCode(((event||window.event).which||(event||window.event).which)));" name="dias_trabajados['.$i.']" value="'.$dias_trabajados_ttAsist2.'">' ;   
 $temp2="$dias_trabajados_ttAsist2";   
 $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
-echo "<td class='text-center' style='min-width:100px; white-space:nowrap;' >$temp</td>";//dias trabajados
+echo '<td style="text-align: center; min-width: 100px;" >'.$temp.'</td>';//dias trabajados
  ?>
-  <td class='text-center' style="min-width:90px; white-space:nowrap;"><?php echo number_format((($dias_trabajados_ttAsist)*(1/6)), 2, ".", ","); ?></td>
-  
-  <td class='text-center' style="min-width:90px; white-space:nowrap;"><?php echo ($diaob - $dias_trabajados_ttAsist - $dias_dvac1) ; ?> </td>
-  <td class='text-center' style="min-width:90px; white-space:nowrap;"><?php echo ($dias_dretardos) ; ?> </td> 
-  
-  
-  <td class='text-center' style="min-width:90px; white-space:nowrap;"><?php echo ($dias_dvac1) ; ?> </td> 
-  <td class='text-center' style="min-width:90px; white-space:nowrap;"><?php echo number_format((($dias_dvac1)*(1/6)), 2, ".", ","); ?> </td> 
-  <?php
+  <td style="text-align: center; min-width: 90px;"><?php echo number_format((($dias_trabajados_ttAsist)*(1/6)), 2, ".", ","); ?></td>  
+  <td style="text-align: center; min-width: 90px;"><?php echo ($diaob - $dias_trabajados_ttAsist - $dias_dvac1) ; ?> </td>
+  <td style="text-align: center; min-width: 100px;"><?php echo ($dias_dretardos) ; ?> </td>
+  <td style="text-align: center; min-width: 100px;"><?php echo ($dias_dvac1) ; ?> </td> 
+  <td style="text-align: center; min-width: 100px;"><?php echo number_format((($dias_dvac1)*(1/6)), 2, ".", ","); ?> </td> 
+<?php
 
 
 $temp='<input type="text" class="form-control" name="dias_ad['.$i.']" value="'.$usuario['dias_adicionales'].'">' ;   
 $temp2="$usuario[dias_adicionales]";   
 $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';  
-echo "<td class='text-center' style='min-width:90px; white-space:nowrap;'>$temp</td>";//dias adicionales
+echo '<td style="text-align: center; min-width: 120px;">'.$temp.'</td>';//dias adicionales
 
 ?>
 <?php
 $tincen = ($is1 + $is2 + $is3 + $is4);
 ?>
-<td class='text-center' style="min-width:90px; white-space:nowrap;"><?php echo number_format($totales_adicionales, 2, ".", ","); ?> </td>
+<td style="text-align: center; min-width: 120px;" ><?php echo number_format($totales_adicionales, 2, ".", ","); ?> </td>
 <?php
 
 $temp='<input type="text" class="form-control" onkeypress="return /\d/.test(String.fromCharCode(((event||window.event).which||(event||window.event).which)));" name="Pasajes['.$i.']" value="'.$usuario['Pasajes'].'">' ;   
 $temp2="$usuario[Pasajes]";   
 $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
-echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' >$temp</td>";
+echo '<td style="text-align: center; min-width: 120px;" >'.$temp.'</td>';
 
 
 $temp='<input type="number" class="form-control" name="incentivon['.$i.']" value="'.$usuario['incentivo'].'">' ;   
 $temp2="$usuario[incentivo]";
 $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
-echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' >$temp</td>"; 
+echo '<td style="text-align: center; min-width: 100px;" >'.$temp.'</td>'; 
 
 $temp='<input type="number" class="form-control" name="incentivosp['.$i.']" value="'.$usuario['incentivosp'].'">' ;   
 $temp2="$usuario[incentivosp]";
 $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
-echo "<td class='text-center' style='min-width:90px; white-space:nowrap;' >$temp</td>";
+echo '<td style="text-align: center; min-width: 120px;" >'.$temp.'</td>';
 
 $temp='<input type="number" class="form-control" name="incidencia['.$i.']" value="'.$usuario['incidencias'].'">' ;   
 $temp2="$usuario[incidencias]";
 $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
-echo "<td class='text-center' style='min-width:90px; white-space:nowrap;'>$temp</td>"; // pendiente pero igual mente colocar
-echo "<td style='min-width:90px; white-space:nowrap;'>$is1</td>";//Incentivo1
-echo "<td style='min-width:90px; white-space:nowrap;'>$is2</td>";//Incentivo2
-echo "<td style='min-width:90px; white-space:nowrap;'>$is3</td>";//Incentivo3
-echo "<td style='min-width:90px; white-space:nowrap;'>$is4</td>";//Incentivo4
-echo "<td style='min-width:90px; white-space:nowrap;'>$tincen </td>";//Incentivo1
- echo '</tr>';
+echo '<td style="text-align: center; min-width: 100px;">'.$temp.'</td>'; // pendiente pero igual mente colocar
+echo '<td style="text-align: center; min-width: 120px;">'.$is1.'</td>';//Incentivo1
+echo '<td style="text-align: center; min-width: 100px;">'.$is2.'</td>';//Incentivo2
+echo '<td style="text-align: center; min-width: 100px;">'.$is3.'</td>';//Incentivo3
+echo '<td style="text-align: center; min-width: 100px;">'.$is4.'</td>';//Incentivo4
+echo '<td style="text-align: center; min-width: 100px;">'.$tincen.' </td>';//Incentivo1
+echo '</tr>';
         ++$i;
     } ?>
 
