@@ -1,4 +1,7 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 $temp="";
 $temp2="";
 $script="";
@@ -34,19 +37,20 @@ $script="";
 </script>
 
       <?php     
-       session_start();        
+       //session_start();        
          $id= $_SESSION['user_log']; 
    // echo $id;
   // $dias = array("domingo","lunes","martes","miercoles","jueves","viernes","sabado");
    //echo "Hoy es es ".$dias[date("w")];
    
 //solo lo que corresponde al que se logeo ...falta moverle el id usuaro por otra cosa
+//echo'<script>console.log(\''.json_encode($_SESSION).'\');</script>';          
 $resultusu = sqlsrv_query($conn, "SELECT * FROM usuaripsPromo WHERE nombre='$id'");
-  
-  if($c=sqlsrv_fetch_array($resultusu)) 
-  {
-            $zonausu=$c['zona'];              
-    } 
+
+if($c=sqlsrv_fetch_array($resultusu)) 
+{
+  $zonausu=$c['zona'];              
+} 
 
 $timestamp = mktime(0, 0, 0, date('n') - 1, 21);
 $lastday = date('Y/m/t',strtotime('last month'));
@@ -62,7 +66,7 @@ $sql4 = sqlsrv_query($conn, "SELECT TOP 1 periodo, period, sem FROM periodo ORDE
                       
                             } 
 
-$sql6 = sqlsrv_query($conn, "SELECT idempleado, pano, periodo, sem, incentivo, sema, ckey  FROM incentivo where periodo=$peractual and sem=$semperiodo");
+/*$sql6 = sqlsrv_query($conn, "SELECT idempleado, pano, periodo, sem, incentivo, sema, ckey  FROM incentivo where periodo=$peractual and sem=$semperiodo");
   if($c=sqlsrv_fetch_array($sql6))
          {
              $inc_idemp=$c['idempleado'];
@@ -72,7 +76,7 @@ $sql6 = sqlsrv_query($conn, "SELECT idempleado, pano, periodo, sem, incentivo, s
        $inc_periodo=$c['incentivo'];
        $inc_periodo=$c['sema'];
        $inc_periodo=$c['ckey'];
-         }              
+         }  */            
               
               
 ?>
@@ -107,7 +111,9 @@ $dateTimeVariable = date("j-m-Y ");
     <div class="row">
 <?php 
         //$sql = "SELECT * FROM usuarionom where gafete='B' and dni in ('".str_replace(",","','",$zonausu)."') ORDER BY canal,us_apellidos,puesto ASC";  //aqui esta la consulta por bloque
-        $sql = "SELECT * FROM usuarionom u LEFT OUTER JOIN incentivo ic on ic.idempleado = u.ucfdi where u.gafete='B' and u.dni in ('".str_replace(",","','",$zonausu)."') and ic.sema = '$varcompa' or (ic.periodo + ic.sem) is NULL ORDER BY canal,us_apellidos,puesto ASC";  //aqui esta la consulta por bloque    
+        $sql = "SELECT * FROM usuarionom u LEFT OUTER JOIN incentivo ic on ic.idempleado = u.ucfdi and ic.sema = '$varcompa' 
+        where u.gafete='B' and u.dni in ('".str_replace(",","','",$zonausu)."')  or (ic.periodo + ic.sem) is NULL ORDER BY canal,us_apellidos,puesto ASC";  //aqui esta la consulta por bloque 
+        //echo'<script>console.log("'.$sql.'");</script>';   
     $result = sqlsrv_query($conn, $sql);
 $i = 0;  ?>
 
@@ -148,7 +154,7 @@ $i = 0;  ?>
   <select id="empleados" class="form-control pull-right" style="width: 180px; margin-right: 5px;" onchange="Buscar(this);">
     <option value="">--Empleado--</option>
     <?php
-    $opt = "SELECT distinct us_nombre_real FROM usuarionom  ORDER BY us_nombre_real desc";     
+    $opt = "SELECT distinct us_nombre_real FROM usuarionom   ORDER BY us_nombre_real desc";     
     $opt = sqlsrv_query($conn, $opt);
     while($options = sqlsrv_fetch_array($opt)){
       echo'<option value="'.$options['us_nombre_real'].'">'.$options['us_nombre_real'].'</option>';
@@ -159,7 +165,7 @@ $i = 0;  ?>
   <select id="cedis" class="form-control pull-right" style="width: 180px; margin-right: 5px;" onchange="Buscar(this);">
     <option value="">--cedis--</option>
     <?php
-    $opt = "SELECT distinct us_nombre FROM usuarionom  ORDER BY us_nombre desc";     
+    $opt = "SELECT distinct us_nombre FROM usuarionom   ORDER BY us_nombre desc";     
     $opt = sqlsrv_query($conn, $opt);
     while($options = sqlsrv_fetch_array($opt)){
       echo'<option value="'.$options['us_nombre'].'">'.$options['us_nombre'].'</option>';
@@ -222,11 +228,11 @@ $i = 0;  ?>
    $canal=$usuario['canal'];
   $NoEmpleado=$usuario['ucfdi'];
    $ucfdi=$usuario['ucfdi'];
-  $usuario_pago=$usuario['pago'];
-$sueldos=$usuario['sueldos'];
-$usuario_Incentivos=$usuario['Incentivos'];
-$usuario_Incentivosp=$usuario['incentivosp'];
-$usuario_incent_diario=$usuario['incent_diario'];
+  //$usuario_pago=$usuario['pago'];
+//$sueldos=$usuario['sueldos'];
+//$usuario_Incentivos=$usuario['Incentivos'];
+//$usuario_Incentivosp=$usuario['incentivosp'];
+//$usuario_incent_diario=$usuario['incent_diario'];
 $id_ruta=$usuario['us_nombre'];
 $fecha_baja_us= $usuario['fecha_baja_us'];// cambiar
 $fecha_alta_us= $usuario['fechaalta'];
@@ -270,11 +276,11 @@ $sql_periodo = sqlsrv_query($conn, "SELECT TOP 1 periodo FROM periodo ORDER BY i
                                 $ultimoPeriodo=$a['periodo'];
                             } 
 
-$sql_asistencia = sqlsrv_query($conn, "SELECT asistencia from asistencia where id_usuario='49'");
+/*$sql_asistencia = sqlsrv_query($conn, "SELECT asistencia from asistencia where id_usuario='$Id_usuario'");
                             if($d=sqlsrv_fetch_array($sql_asistencia)) {
                                 $asistencia_fecha=date_format ($d['fecha'], 'd-m-Y');
                                 $asistencias_asistidas=$d['id_app'];
-                            }  
+                            }  */
 
               
   //dias asistencia           
@@ -307,7 +313,7 @@ $result1233 = sqlsrv_num_rows( $stmt );
 $stmt2 = sqlsrv_query( $conn, $sql_asistencia_asistidas2 , $params, $options );
 $dias_trabajados_ttAsist = sqlsrv_num_rows( $stmt2 );
 $stmt3 = sqlsrv_query( $conn, $sql_asistencia_adicionales2 , $params, $options );
-$dias_adicionales_ttAsist = sqlsrv_num_rows( $stmt3 );//dias adicionales.... pendiente tuve que dejarlo para atenbder otra cosa... pff
+//$dias_adicionales_ttAsist = sqlsrv_num_rows( $stmt3 );//dias adicionales.... pendiente tuve que dejarlo para atenbder otra cosa... pff
 
 //echo $dias_adicionales_ttAsist;
 
@@ -336,43 +342,43 @@ $dias_dretardos = intval($dias_dec);
 
 ///////
 
-$fechawewe+=$asistencia_fecha;
-$total+=$usuario['incentivo'];   //$usuario['incdia'];  
-$total+=$usuario['incentivosp'];                          
-$total_us_pago+=$usuario['pago'];
-$total_us_pasaje+=$usuario['Pasajes'];
-$total_us_dias_trabajados+= $usuario['dias_trabajados'];  
-$total_us_dias_adicionales+=$usuario['dias_adicionales']; 
-$total_us_sueldos+=$usuario['sueldos']; 
-$total+= $periodo['incentivo'];    //$periodo['incdia'];  
-$total+=$periodo['incentivosp'];                          
-$total_us_pago+=$periodo['pago'];
-$total_us_dias_trabajados+=$periodo['dias_trabajados'];  
-$total_us_dias_adicionales+=$periodo['dias_adicionales']; 
-$total_us_dias_dvac = ($dias_dvac1) + (($dias_dvac1)*(1/6));
-$total_us_dias_dvacprop = (($dias_dvac1)*(1/6));
-$total_us_sueldos+=$periodo['sueldos']; 
-$suma_de_todo+=$total_suma_final;
+//$fechawewe+=$asistencia_fecha;
+//$total+=$usuario['incentivo'];   //$usuario['incdia'];  
+//$total+=$usuario['incentivosp'];                          
+//$total_us_pago+=$usuario['pago'];
+//$total_us_pasaje+=$usuario['Pasajes'];
+//$total_us_dias_trabajados+= $usuario['dias_trabajados'];  
+//$total_us_dias_adicionales+=$usuario['dias_adicionales']; 
+//$total_us_sueldos+=$usuario['sueldos']; 
+//$total+= $periodo['incentivo'];    //$periodo['incdia'];  
+//$total+=$periodo['incentivosp'];                          
+//$total_us_pago+=$periodo['pago'];
+//$total_us_dias_trabajados+=$periodo['dias_trabajados'];  
+//$total_us_dias_adicionales+=$periodo['dias_adicionales']; 
+//$total_us_dias_dvac = ($dias_dvac1) + (($dias_dvac1)*(1/6));
+//$total_us_dias_dvacprop = (($dias_dvac1)*(1/6));
+//$total_us_sueldos+=$periodo['sueldos']; 
+//$suma_de_todo+=$total_suma_final;
 $OneDivSix = 1/6;
-$toatels_trabajados = ($dias_adicionales+($dias_adicionales*($OneDivSix)))+($dias_trabajados+($dias_trabajados*($OneDivSix)))+($dias_dvac1+($dias_dvac1*($OneDivSix))) - ($dias_dretardos+($dias_dretardos*($OneDivSix)));
+//$toatels_trabajados = ($dias_adicionales+($dias_adicionales*($OneDivSix)))+($dias_trabajados+($dias_trabajados*($OneDivSix)))+($dias_dvac1+($dias_dvac1*($OneDivSix))) - ($dias_dretardos+($dias_dretardos*($OneDivSix)));
 $totales_adicionales = $dias_adicionales*($OneDivSix);
-$totales_trabj_sueld = $toatels_trabajados*$sueldos;
-$dias_descanso = (($dias_trabajados_ttAsist)*(1/6));
-$pasaje_total= $toatels_trabajados*$pasajes;
-$pasaje_monto= 0*$pasaje_total; //pasajes
-$total_suma_final = $totales_trabj_sueld+$incentivo+$pasaje_total;
-$pasajes_suma +=$pasajes;
-$suma_pasaje_total+=$pasaje_total;
-$suma_totales_trabj_sueld+=$totales_trabj_sueld;
-$suma_sueldos+=$sueldos;
-$suma_toatels_trabajados+=$toatels_trabajados;
-$suma_totales_adicionales+=$totales_adicionales;
-$suma_infonavit+=$infonavit;
-$suma_cahorro+=$cahorro;
+//$totales_trabj_sueld = $toatels_trabajados*$sueldos;
+//$dias_descanso = (($dias_trabajados_ttAsist)*(1/6));
+//$pasaje_total= $toatels_trabajados*$pasajes;
+//$pasaje_monto= 0*$pasaje_total; //pasajes
+//$total_suma_final = $totales_trabj_sueld+$incentivo+$pasaje_total;
+//$pasajes_suma +=$pasajes;
+//$suma_pasaje_total+=$pasaje_total;
+//$suma_totales_trabj_sueld+=$totales_trabj_sueld;
+//$suma_sueldos+=$sueldos;
+//$suma_toatels_trabajados+=$toatels_trabajados;
+//$suma_totales_adicionales+=$totales_adicionales;
+//$suma_infonavit+=$infonavit;
+//$suma_cahorro+=$cahorro;
 
 $dias_trabajados_ttAsist2= $dias_trabajados_ttAsist - $dias_dretardos;
 
-echo $row_cnt;
+//echo $row_cnt;
   echo '<tr>';
    echo '<td style="text-align: center; min-width: 60px;">';
    if( $us_tt_promo_apellido1==='claus1') {
