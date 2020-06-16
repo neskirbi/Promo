@@ -47,13 +47,9 @@
     <!-- Custom Theme Style -->
     <link href="../build/css/custom.css" rel="stylesheet">
   </head>
-  <script type="text/javascript">
-      $( document ).ready(function() {
-            $("#menu_toggle").click();
-        });
-  </script>
+  
 
-  <body class="nav-md footer_fixed">
+  <body class="nav-sm footer_fixed">
     <div class="container body">
       <div class="main_container">
         <div class="col-md-3 left_col menu_fixed"><!---  --->
