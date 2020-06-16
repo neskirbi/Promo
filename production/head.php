@@ -47,6 +47,11 @@
     <!-- Custom Theme Style -->
     <link href="../build/css/custom.css" rel="stylesheet">
   </head>
+  <script type="text/javascript">
+      $( document ).ready(function() {
+            $("#menu_toggle").click();
+        });
+  </script>
 
   <body class="nav-md footer_fixed">
     <div class="container body">
@@ -54,7 +59,7 @@
         <div class="col-md-3 left_col menu_fixed"><!---  --->
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0; height: 90px;">
-              <a href="dashboard.php" class="site_title; style=height:80px; margin: 20px 20px 0 5px;"><img src="images/logo.png" width="90" height="90"> <span style=" font-size: 25px; color: #fff; ">PROMO</span></a>
+              <a href="dashboard.php" class="site_title; style=height:80px; margin: 20px 20px 0 5px;"><img src="images/logo.png" width="60" height="60"> <span style=" font-size: 25px; color: #fff; ">PROMO</span></a>
             </div>
 
             <div class="clearfix"></div>

@@ -265,7 +265,8 @@ if(count($_POST)==0){
         <td style="text-align: center; background-color:#405467;"><font style="color: #fff;">Total</font></td>
         <td style="text-align: center; background-color:#405467;"></td>
         <td style="text-align: center; background-color:#405467;"></td>
-
+        <td style="text-align: center; background-color:#405467;"></td>
+        <td style="text-align: center; background-color:#405467;"></td>
         <td style="text-align: center; background-color:#405467;"></td>
         <td style="text-align: center; background-color:#405467;"></td> 
         <td style="text-align: center; background-color:#405467;"></td>    
@@ -281,6 +282,8 @@ if(count($_POST)==0){
         <td style="text-align: center; background-color:#405467; "><font style="color: #fff;">$<?php echo number_format($suma_de_todo, 2, ".", ","); ?></font></td>
         </tr>                            
     </table>
+    <br>
+    <br>
                     
          
                  
