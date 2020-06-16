@@ -29,7 +29,7 @@
 //solo lo que corresponde al que se logeo ...falta moverle el id usuaro por otra cosa
 //$result = sqlsrv_query($conn, "SELECT * FROM usuario WHERE Id_usuario=".$_SESSION['Id_usuario']." ORDER BY Id_usuario DESC");
 
-	     session_start();        
+	     //session_start();        
          $id= $_SESSION['user_log']; 
 	  echo $id;
 	//solo lo que corresponde al que se logeo ...falta moverle el id usuaro por otra cosa
