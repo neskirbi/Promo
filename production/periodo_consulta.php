@@ -78,7 +78,7 @@ if(count($_POST)==0){
 
       <br>
       <div class="pull-right">
-        <!--<select id="puestos" class="form-control pull-right" style="width: 220px; margin-right: 5px;" onchange="Buscar(this);">
+        <select id="puestos" class="form-control pull-right" style="width: 220px;" onchange="Buscar(this);">
           <option value="">--Puesto--</option>
           <?php
 
@@ -88,10 +88,10 @@ if(count($_POST)==0){
             echo'<option value="'.$options['descripcion'].'">'.$options['descripcion'].'</option>';
           }
           ?>
-        </select>-->
+        </select>
 
 
-        <select id="empleados" class="form-control pull-right" style="width: 180px;" onchange="Buscar(this);">
+        <select id="empleados" class="form-control pull-right" style="width: 180px; margin-right: 5px;" onchange="Buscar(this);">
           <option value="">--Empleado--</option>
           <?php
           $opt = "SELECT us_nombre_real FROM datosp where Periodo='$ultimoPeriodo' AND us_nombre_real != 'VACANTE' ORDER BY Id_usuario ASC";     
@@ -102,9 +102,9 @@ if(count($_POST)==0){
           ?>
         </select>
 
-        <input type="text" class="form-control pull-right" styname="" style="width: 180px; margin-right: 5px;" onkeyup="Buscar(this);" placeholder="Numero Empleado">
+        <!--<input type="text" class="form-control pull-right" styname="" style="width: 180px; margin-right: 5px;" onkeyup="Buscar(this);" placeholder="Numero Empleado">-->
 
-        <!--<select id="cedis" class="form-control pull-right" style="width: 180px; margin-right: 5px;" onchange="Buscar(this);">
+        <select id="cedis" class="form-control pull-right" style="width: 180px; margin-right: 5px;" onchange="Buscar(this);">
           <option value="">--cedis--</option>
           <?php
           $opt = "SELECT distinct us_nombre FROM usuarionom   ORDER BY us_nombre desc";     
@@ -113,7 +113,7 @@ if(count($_POST)==0){
             echo'<option value="'.$options['us_nombre'].'">'.$options['us_nombre'].'</option>';
           }
           ?>
-        </select>-->
+        </select>
 
 
       </div>
@@ -133,7 +133,9 @@ if(count($_POST)==0){
     <thead>
       <tr>
         <th style="text-align: center; background-color: #405467; border:solid #fff 1px;"><font style="color: #fff; "  size="2" >Numero Empleado</font></th>
-        <th style="text-align: center; background-color: #405467; border:solid #fff 1px;"><font style="color: #fff; "  size="2" >Nombre</font></th>    
+        <th style="text-align: center; background-color: #405467; border:solid #fff 1px;"><font style="color: #fff; "  size="2" >Nombre</font></th>   
+        <th style="text-align: center; background-color: #405467; border:solid #fff 1px;"><font style="color: #fff; "  size="2" >Puesto</font></th> 
+        <th style="text-align: center; background-color: #405467; border:solid #fff 1px;"><font style="color: #fff; "  size="2" >CEDIS</font></th>  
         <th style="text-align: center; background-color: #405467; border:solid #fff 1px;"><font style="color: #fff; "  size="2" >Periodo</font></th>
         <th style="text-align: center; background-color: #405467; border:solid #fff 1px;"><font style="color: #fff; "  size="2" >Cheque</font></th>
         <th style="text-align: center; background-color: #405467; border:solid #fff 1px;"><font style="color: #fff; "  size="2" >Transferencia</font></th>
@@ -166,8 +168,14 @@ if(count($_POST)==0){
       $suma_incentivo=0;
       $suma_incentivop=0;
       $suma_de_todo=0;
-      $sql = "SELECT * FROM datosp where Periodo='$ultimoPeriodo' AND us_nombre_real != 'VACANTE' ORDER BY Id_usuario ASC ";  
-      echo'<script> console.log("'.$sql.'"); </script>';  
+      $sql = "SELECT dat.id,dat.Id_usuario,dat.Periodo,dat.SD,dat.Pasajediario,dat.diaspago,dat.tincentivo,dat.tincentivop,dat.transferencia,dat.cheque,dat.infonavit,dat.cahorro,dat.ddescanso,dat.dvac,dat.diasextra,dat.ucfdi,dat.dias_trabajados,dat.us_nombre_real,dat.dias_adicionales,dat.sueldos,dat.Pasajes,dat.Incentivos,dat.incentivosp,dat.us_nombre,dat.ultima_actualizacion,dat.estatus,usu.us_nombre,pus.descripcion
+      FROM datosp as dat 
+      join usuarionom as usu on usu.Id_usuario = dat.Id_usuario
+      join puesto as pus on pus.id=usu.puesto
+      where dat.Periodo='$ultimoPeriodo' AND dat.us_nombre_real != 'VACANTE' 
+      ORDER BY dat.Id_usuario ASC ";  
+
+      echo'<script> console.log("'.str_replace("\n"," ",$sql).'"); </script>';  
       $result = sqlsrv_query($conn, $sql);  
       while($periodo = sqlsrv_fetch_array($result)) {
 
@@ -197,6 +205,8 @@ if(count($_POST)==0){
         $id_ruta=$periodo['us_nombre'];
         $periodo['ultima_actualizacion'];
         $periodo['estatus'];   
+        $us_nombre=$periodo['us_nombre'];
+        $descripcion=$periodo['descripcion'];
 
      
 
@@ -223,7 +233,9 @@ if(count($_POST)==0){
         ?>
       <tr>
         <td style="text-align: center; min-width: 100px;"><font size="2"><?php echo $NoEmpleado; ?></font></td>
-        <td style="text-align: center; min-width: 100px;"><font size="2"><?php echo $us_nombre_real; ?></font></td>  
+        <td style="text-align: center; min-width: 100px;"><font size="2"><?php echo $us_nombre_real; ?></font></td>
+        <td style="text-align: center; min-width: 100px;"><font size="2"><?php echo $descripcion; ?></font></td>
+        <td style="text-align: center; min-width: 100px;"><font size="2"><?php echo $us_nombre; ?></font></td>  
         <td style="text-align: center; min-width: 100px;"><font size="2"><?php echo $periodo_fecha; ?></font></td>           
         <td style="text-align: center; min-width: 100px;"><font size="2"><?php echo $cheque; ?></font></td>                  
         <td style="text-align: center; min-width: 100px;"><font size="2"><?php echo $transferencia; ?></font></td>  
