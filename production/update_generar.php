@@ -68,7 +68,7 @@ echo "<br><center>".$ultimoPeriodo."</center>";
 echo '<br><center>Y el periodo actual en periodo es: </center>';
 echo "<br><center>".$periodo3."</center>";
 } else {
-
+echo '<br><center><b>Generando nomina. </b></center>';
 $size = count($_POST['ucfdi']);
 
 $i = 0;

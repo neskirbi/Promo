@@ -2,11 +2,10 @@ segundo encargo
 
 
 1.- las columnas Numero de empleado , nombre, canal, cedis, puesto deben quedar fijas las demas si se pueden mover.
-2.- El menu lateral debe quedar de entrada minimizado
-3.- los mensajes echo deben estar desabilitados.----*
-4.- Al momento de dar autorizar y si ya esta autorizado el mensaje se manda en una ventana que indique que ya fue generado no en un echo.---*
+2.- El menu lateral debe quedar de entrada minimizado----
+3.- los mensajes echo deben estar desabilitados.----* mejorar el mensaje de crar nomina
+4.- Al momento de dar autorizar y si ya esta autorizado el mensaje se manda en una ventana que indique que ya fue generado no en un echo.---*mejorar el mensaje de crar nomina
 5.- en el menu Nominas, puedes incluir por favor los campos cedis, puesto------
-6.- En el menu nominas hace falta un filtro por Periodo campo period,
-7.- tambien por cedis.----
+6.- En el menu nominas hace falta un filtro por Periodo campo period,  tambien por cedis.----
 8.- Podrias totalizar
-9.- En los reportes podrias agregar  2 filas, fila 1 Prootecnicas y ventas SA de Cv., fila 2 el periodo de la nomina.
+9.- En los reportes podrias agregar  2 filas, fila 1 Prootecnicas y ventas SA de Cv., fila 2 el periodo de la nomina.---

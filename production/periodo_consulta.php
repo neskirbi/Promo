@@ -6,17 +6,7 @@
 ?>
 <!-----------------------------------------------------------------------------------------------------------------------------------------------------> 
 <script>
-  var tableToExcel = (function() {
-  var uri = 'data:application/vnd.ms-excel;base64,'
-    , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
-    , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))) }
-    , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }) }
-  return function(table, name) {
-    if (!table.nodeType) table = document.getElementById(table)
-    var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML}
-    window.location.href = uri + base64(format(template, ctx))
-  }
-})()
+
 </script>             
 <div class="row"><!--- --->
   <div class="col-md-12">
@@ -27,9 +17,9 @@
 //$result = sqlsrv_query($conn, "SELECT * FROM usuario WHERE Id_usuario=".$_SESSION['Id_usuario']." ORDER BY Id_usuario DESC");
 //esta comentado alfinal parece que no se usara pero guardar por si acaso si se usa 
 if(count($_POST)==0){
-  $sql4 = sqlsrv_query($conn, "SELECT TOP 1 periodo FROM periodo ORDER BY idp DESC");
+  $sql4 = sqlsrv_query($conn, "SELECT TOP 1 period FROM periodo ORDER BY idp DESC");
   if($c=sqlsrv_fetch_array($sql4)) {
-    $ultimoPeriodo=$c['periodo'];
+    $ultimoPeriodo=$c['period'];
   } 
 }else{
  $ultimoPeriodo=$_POST['periodo'];
@@ -39,7 +29,7 @@ if(count($_POST)==0){
 
 ?>  
 <i class="fa fa-globe"> Nómina autorizada por el cliente.</i> <!--- Periordo. --->
-<small class="pull-right">Periodo: <?php echo $ultimoPeriodo; ?>.</small>
+<font class="pull-right">Periodo: <?php echo $ultimoPeriodo; ?>.</font>
     </div> 
 <?php     
 //solo lo que corresponde al que se logeo ...falta moverle el id usuaro por otra cosa
@@ -56,18 +46,19 @@ if(count($_POST)==0){
 
         <?php
         if(count($_POST)!=0){
-          echo'<option value="'.$ultimoPeriodo.'">'.$ultimoPeriodo.'</option>';
+          echo'<option value="'.$ultimoPeriodo.'">'.$ultimoPeriodo.'</option><optgroup>-----</optgroup>';
         } 
 
-        $opt = "SELECT distinct Periodo,ultima_actualizacion FROM datosp  ORDER BY ultima_actualizacion ASC ";     
+        $opt = "SELECT  distinct per.period, (select top 1 idp from periodo where period=per.period) as idp FROM periodo as per order by idp desc ";     
         $opt = sqlsrv_query($conn, $opt);
         while($options = sqlsrv_fetch_array($opt)){
-          echo'<option value="'.$options['Periodo'].'">'.$options['Periodo'].'</option>';
+          $option='<option value="'.$options['period'].'">'.$options['period'].'</option>';
+          echo $options['period']==null || $options['period']=="" ? "" : $option;
         }
 
           ?>
       </select>
-      <a data-toggle="tooltip" data-placement="top" title="" class="btn btn-info pull-right" onclick="TableToExcel('nomina', 'W3C Example Table')" data-original-title="Exportar Excel"><i class="glyphicon glyphicon-folder-open"></i></a>
+      <a data-toggle="tooltip" data-placement="top" title="" class="btn btn-info pull-right" onclick="TableToExcel('nomina', 'W3C Example Table','<?php echo $ultimoPeriodo;?>')" data-original-title="Exportar Excel"><i class="glyphicon glyphicon-folder-open"></i></a>
       <button data-toggle="tooltip" data-placement="top" title='Imprimir' class="btn btn-success pull-right no-print" onclick="window.print();"><i class="fa fa-print"></i></button>
  
     <!---
@@ -94,7 +85,11 @@ if(count($_POST)==0){
         <select id="empleados" class="form-control pull-right" style="width: 180px; margin-right: 5px;" onchange="Buscar(this);">
           <option value="">--Empleado--</option>
           <?php
-          $opt = "SELECT us_nombre_real FROM datosp where Periodo='$ultimoPeriodo' AND us_nombre_real != 'VACANTE' ORDER BY Id_usuario ASC";     
+          $opt = "SELECT dat.us_nombre_real 
+          FROM periodo as per
+          join datosp as dat on dat.Periodo=per.periodo 
+          where per.period='$ultimoPeriodo' AND dat.us_nombre_real != 'VACANTE' ORDER BY dat.Id_usuario ASC";
+          ///echo'<script> console.log("'.str_replace("\n"," ",$opt).'"); </script>';       
           $opt = sqlsrv_query($conn, $opt);
           while($options = sqlsrv_fetch_array($opt)){
             echo'<option value="'.$options['us_nombre_real'].'">'.$options['us_nombre_real'].'</option>';
@@ -169,13 +164,14 @@ if(count($_POST)==0){
       $suma_incentivop=0;
       $suma_de_todo=0;
       $sql = "SELECT dat.id,dat.Id_usuario,dat.Periodo,dat.SD,dat.Pasajediario,dat.diaspago,dat.tincentivo,dat.tincentivop,dat.transferencia,dat.cheque,dat.infonavit,dat.cahorro,dat.ddescanso,dat.dvac,dat.diasextra,dat.ucfdi,dat.dias_trabajados,dat.us_nombre_real,dat.dias_adicionales,dat.sueldos,dat.Pasajes,dat.Incentivos,dat.incentivosp,dat.us_nombre,dat.ultima_actualizacion,dat.estatus,usu.us_nombre,pus.descripcion
-      FROM datosp as dat 
+      FROM periodo as per
+      join datosp as dat on dat.Periodo=per.periodo
       join usuarionom as usu on usu.Id_usuario = dat.Id_usuario
       join puesto as pus on pus.id=usu.puesto
-      where dat.Periodo='$ultimoPeriodo' AND dat.us_nombre_real != 'VACANTE' 
+      where per.period='$ultimoPeriodo' AND dat.us_nombre_real != 'VACANTE' 
       ORDER BY dat.Id_usuario ASC ";  
 
-      echo'<script> console.log("'.str_replace("\n"," ",$sql).'"); </script>';  
+      //echo'<script> console.log("'.str_replace("\n"," ",$sql).'"); </script>';  
       $result = sqlsrv_query($conn, $sql);  
       while($periodo = sqlsrv_fetch_array($result)) {
 
@@ -207,9 +203,6 @@ if(count($_POST)==0){
         $periodo['estatus'];   
         $us_nombre=$periodo['us_nombre'];
         $descripcion=$periodo['descripcion'];
-
-     
-
         $OneDivSix = 1/6;
         $dias_descanso = $dias_trabajados*($OneDivSix);
         $totales_adicionales = $dias_adicionales*($OneDivSix);
@@ -217,8 +210,7 @@ if(count($_POST)==0){
         $toatels_trabajados = ($dias_adicionales+($dias_adicionales*($OneDivSix)))+($dias_trabajados+($dias_trabajados*($OneDivSix)))+($dias_dvac+($dias_dvac*($OneDivSix)));
         $totales_trabj_sueld = $toatels_trabajados*$sueldos;
         $pasaje_total= $toatels_trabajados*$pasajes;
-        $total_suma_final = $totales_trabj_sueld+$incentivo+$incentivosp+$pasaje_total;
-        
+        $total_suma_final = $totales_trabj_sueld+$incentivo+$incentivosp+$pasaje_total;        
         $suma_totales_adicionales+=$totales_adicionales;
         $suma_totales_dvac+=$totales_dvac;
         $suma_toatels_trabajados+=$toatels_trabajados;
@@ -334,16 +326,24 @@ function FiltaPeriodo(este,path="periodo_consulta.php", params, method='post') {
 }
 
 
-function TableToExcel(table, name) {
+function TableToExcel(table, name,periodo) {
   var uri = 'data:application/vnd.ms-excel;base64,'
     , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
     , base64 = function(s) { return window.btoa(unescape(encodeURIComponent(s))); }
     , format = function(s, c) { return s.replace(/{(\w+)}/g, function(m, p) { return c[p]; }); };
-   if (!table.nodeType)
+    var row1='<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td>Promotecnicas y ventas SA de Cv.</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>',
+    row2='<tr><td></td><td>Periodo: '+periodo+'</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>';
+    var tablet=$('#'+table).html();
+    
+    var tablef=$("<table></table>").html(tablet);
+    tablef.find("thead").before(row1).before(row2);
+    console.log(tablef.html());
+    
+   /*if (!table.nodeType)
       table = document.getElementById(table);
-      
+      */
      
-    var ctx = {worksheet: name || 'Worksheet', table: table.innerHTML};
+    var ctx = {worksheet: name || 'Worksheet', table: tablef.html()};
     window.location.href = uri + base64(format(template, ctx));
 }
 
