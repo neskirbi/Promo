@@ -11,7 +11,10 @@ $script="";
 ?>
 
 <style type="text/css">
-  
+  .fijo{
+    position: sticky;
+    left: 0px;
+  }
 </style>
 
 <script language="javascript" src="users.js" type="text/javascript"></script>
@@ -117,9 +120,9 @@ $dateTimeVariable = date("j-m-Y ");
                             }   
 
  $sql_periodo_inicial = sqlsrv_query($conn, "SELECT top 1 diasp FROM periodo order by diasp DESC");
-   if($t_periodo_c=sqlsrv_fetch_array($sql_periodo_inicial)) {
-                                $t_perido_diap=$t_periodo_c['diasp'];
-                            }                 
+ if($t_periodo_c=sqlsrv_fetch_array($sql_periodo_inicial)) {
+    $t_perido_diap=$t_periodo_c['diasp'];
+  }                 
   //echo $t_perido_diai ; 
   //echo $t_perido_diaf ;                          
 ?>
@@ -191,11 +194,11 @@ $i = 0;  ?>
 <form name='frmUser' method='post' action=''>    
   <table id="Personal" class="table"  >
     <thead>
-      <th class="fijo" style=" min-width: 60px; background-color: #405467;">&nbsp;</th>
-      <th class="fijo" style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:80px; "><font style="color: #fff;" size="2" >No. Empleado</font></th>
+      <th style=" min-width: 60px; background-color: #405467;">&nbsp;</th>
+      <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:80px; "><font style="color: #fff;" size="2" >No. Empleado</font></th>
       <th class="fijo" style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:250px; "><font style="color: #fff;" size="2" >Nombre</font></th>
-      <th class="fijo" style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:80px; "><font style="color: #fff;" size="2" >Canal</font></th>
-      <th class="fijo" style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:120px; "><font style="color: #fff;" size="2" >Cedis</font></th>
+      <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:80px; "><font style="color: #fff;" size="2" >Canal</font></th>
+      <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:120px; "><font style="color: #fff;" size="2" >Cedis</font></th>
       <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:150px; "><font style="color: #fff;" size="2" >Puesto</font></th>
       <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:110px; "><font style="color: #fff;" size="2" >Status</font></th>
       <th style="text-align: center; background-color: #405467; border:solid #fff 1px; min-width:100px; "><font style="color: #fff;" size="2" >Fecha Alta</font></th>
@@ -228,8 +231,11 @@ $i = 0;  ?>
 
       <?php
       $sql = "SELECT can.descripcion as canal,pus.descripcion as puesto,usu.foto,usu.us_nombre_real,usu.ruta,usu.ucfdi,usu.us_nombre
-      ,usu.fecha_baja_us,usu.fechaalta,usu.SD,usu.dias_trabajados,usu.dias_adicionales,usu.Pasajes,usu.pasajes,inc.incentivo,usu.incentivosp
-      ,usu.ddescanso,usu.estatus,usu.is1,usu.is2,usu.is3,usu.is4,usu.Id_usuario,usu.incidencias
+      ,usu.fecha_baja_us,usu.fechaalta,usu.SD,usu.dias_adicionales,usu.Pasajes,usu.pasajes,inc.incentivo,usu.incentivosp
+      ,usu.ddescanso,usu.estatus,usu.is1,usu.is2,usu.is3,usu.is4,usu.Id_usuario,usu.incidencias,
+      (SELECT count(asistencia) FROM asistencia where id_usuario= usu.Id_usuario and asistencia = '1' and fecha between '$t_perido_diai' and '$t_perido_diaf') as dias_trabajados,
+      (SELECT count(asistencia) FROM asistencia where id_usuario= usu.Id_usuario and id_motivo = '3' and fecha between '$t_perido_diai' and '$t_perido_diaf') as dias_dvac1,
+      (SELECT count(asistencia) FROM asistencia where id_usuario= usu.Id_usuario and id_motivo = '4' and fecha between '$t_perido_diai' and '$t_perido_diaf') as retardos
       FROM usuarionom usu 
       LEFT OUTER JOIN incentivo inc on inc.idempleado = usu.ucfdi and inc.sema = '$varcompa'
       LEFT JOIN puesto as pus on  pus.id=usu.puesto
@@ -251,6 +257,8 @@ $i = 0;  ?>
         $fecha_alta_us= $usuario['fechaalta'];
         $sueldo_diario=$usuario['SD'];
         $dias_trabajados= $usuario['dias_trabajados'];
+        $dias_dvac1=$usuario['dias_dvac1'];
+        $dias_dretardo=$usuario['retardos'];
         $dias_adicionales= $usuario['dias_adicionales'];
         $pasajes=$usuario['Pasajes'];
         $incentivo= $usuario['incentivo'];
@@ -302,64 +310,65 @@ $i = 0;  ?>
 
           
           //dias asistencia           
-        $sql_asistencia2 = "SELECT * FROM asistencia where id_usuario=$Id_usuario and fecha >= '$fecha1' and fecha <= '$fecha2' and asistencia = '1'";
+        //$sql_asistencia2 = "SELECT * FROM asistencia where id_usuario=$Id_usuario and fecha >= '$fecha1' and fecha <= '$fecha2' and asistencia = '1'";
         //echo'<script>console.log("'.$sql_asistencia2.'");</script>';
-        $sql_asistencia_asistidas2 = "SELECT * FROM asistencia where id_usuario= $Id_usuario and asistencia = '1' and fecha between '$fecha1' and '$fecha2'";
         //echo'<script>console.log("'.$sql_asistencia_asistidas2.'");</script>';
 
-        $sql_asistencia_adicionales2="SELECT * FROM asistencia WHERE id_usuario=$Id_usuario AND asistencia = '1' AND $fecha_alta_us BETWEEN '$fecha1' AND '$fecha2'";
+        //$sql_asistencia_adicionales2="SELECT * FROM asistencia WHERE id_usuario=$Id_usuario AND asistencia = '1' AND $fecha_alta_us BETWEEN '$fecha1' AND '$fecha2'";
         //echo'<script>console.log("'.$sql_asistencia_adicionales2.'");</script>';
         //echo $Id_usuario ." ";
 
         //dias de vacaciones
-        $sql_asistencia2v = "SELECT * FROM asistencia where id_usuario=$Id_usuario and fecha >= '$fecha1' and fecha <= '$fecha2' and id_motivo = '3'";
+        //$sql_asistencia2v = "SELECT * FROM asistencia where id_usuario=$Id_usuario and fecha >= '$fecha1' and fecha <= '$fecha2' and id_motivo = '3'";
         //echo'<script>console.log("'.$sql_asistencia2v.'");</script>';
-        $sql_asistencia_asistidas2v = "SELECT * FROM asistencia where id_usuario= $Id_usuario and id_motivo = '3' and fecha between '$fecha1' and '$fecha2'";
         //echo'<script>console.log("'.$sql_asistencia_asistidas2v.'");</script>';
 
-        $sql_asistencia_adicionales2v="SELECT * FROM asistencia WHERE id_usuario=$Id_usuario AND id_motivo = '3' AND $fecha_alta_us BETWEEN '$fecha1' AND '$fecha2'";
+        //$sql_asistencia_adicionales2v="SELECT * FROM asistencia WHERE id_usuario=$Id_usuario AND id_motivo = '3' AND $fecha_alta_us BETWEEN '$fecha1' AND '$fecha2'";
         //echo'<script>console.log("'.$sql_asistencia_adicionales2v.'");</script>';
 
 
         //$sql_asistencia2 = "SELECT * FROM asistencia where id_usuario=$Id_usuario and fecha > '2018-07-25' and asistencia = '0'";
         //$sql_asistencia2 = "SELECT * FROM asistencia where id_usuario=$Id_usuario and fecha >= GETDATE()-15 and asistencia = '0' ";
-        $params = array();
-        $options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
-        $stmt = sqlsrv_query( $conn, $sql_asistencia2 , $params, $options );
+        /*$options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
+        $stmt = sqlsrv_query( $conn, $sql_asistencia2 , $params, $options );*/
         //$stmt = sqlsrv_query( $conn, $sql_trabjados_ttAsist2 , $params, $options );
-        $result1233 = sqlsrv_num_rows( $stmt );
+        //$result1233 = sqlsrv_num_rows( $stmt );
         //echo $result1233;
         //$total_asistencias+=$asistencias_asistidas;
         //nota los parametros de sql no todos son validos para sql server y los valores de la tabla estan fuera de formato o con tipo de dato mesclado int , varchar, real, date ...etc checar luego  
         //$sql_asistencia2 = "SELECT * FROM asistencia where id_usuario=$Id_usuario and fecha > '$fecha_asist' and asistencia = '0'";
         //$options =  array( "Scrollable" => SQLSRV_CURSOR_KEYSET );
         //$stmt = sqlsrv_query( $conn, $sql_asistencia2 , $params, $options );
+        $params = array();
+        /*$sql_asistencia_asistidas2 = "SELECT * FROM asistencia where id_usuario= $Id_usuario and asistencia = '1' and fecha between '$fecha1' and '$fecha2'";
         $stmt2 = sqlsrv_query( $conn, $sql_asistencia_asistidas2 , $params, $options );
-        $dias_trabajados_ttAsist = sqlsrv_num_rows( $stmt2 );
-        $stmt3 = sqlsrv_query( $conn, $sql_asistencia_adicionales2 , $params, $options );
+        $dias_trabajados_ttAsist = sqlsrv_num_rows( $stmt2 );*/
+        //$stmt3 = sqlsrv_query( $conn, $sql_asistencia_adicionales2 , $params, $options );
         //$dias_adicionales_ttAsist = sqlsrv_num_rows( $stmt3 );//dias adicionales.... pendiente tuve que dejarlo para atenbder otra cosa... pff
 
         //echo $dias_adicionales_ttAsist;
 
 
         // calculos de dias vacaciones
-        $stmtv = sqlsrv_query( $conn, $sql_asistencia2v , $params, $options );
-        $result1233v = sqlsrv_num_rows( $stmtv );
+        //$stmtv = sqlsrv_query( $conn, $sql_asistencia2v , $params, $options );
+        //$result1233v = sqlsrv_num_rows( $stmtv );
+        /*$sql_asistencia_asistidas2v = "SELECT * FROM asistencia where id_usuario= $Id_usuario and id_motivo = '3' and fecha between '$fecha1' and '$fecha2'";
         $stmt2v = sqlsrv_query( $conn, $sql_asistencia_asistidas2v , $params, $options );
-        $dias_dvac1 = sqlsrv_num_rows( $stmt2v );
+        $dias_dvac1 = sqlsrv_num_rows( $stmt2v );*/
+
+
+
 
 
         //dias de vacaciones
-        $sql_asistencia2r = "SELECT * FROM asistencia where id_usuario=$Id_usuario and fecha >= '$fecha1' and fecha <= '$fecha2' and id_motivo = '4'";
-        $sql_asistencia_asistidas2r = "SELECT * FROM asistencia where id_usuario= $Id_usuario and id_motivo = '4' and fecha between '$fecha1' and '$fecha2'";
-
-
-
+        //$sql_asistencia2r = "SELECT * FROM asistencia where id_usuario=$Id_usuario and fecha >= '$fecha1' and fecha <= '$fecha2' and id_motivo = '4'";
+        //$stmtr = sqlsrv_query( $conn, $sql_asistencia2r , $params, $options );
+        //$result1233r = sqlsrv_num_rows( $stmtr );
+        
         // calculos de retardos
-        $stmtr = sqlsrv_query( $conn, $sql_asistencia2r , $params, $options );
-        $result1233r = sqlsrv_num_rows( $stmtr );
+        /*$sql_asistencia_asistidas2r = "SELECT * FROM asistencia where id_usuario= $Id_usuario and id_motivo = '4' and fecha between '$fecha1' and '$fecha2'";
         $stmt2r = sqlsrv_query( $conn, $sql_asistencia_asistidas2r , $params, $options );
-        $dias_dretardo = sqlsrv_num_rows( $stmt2r );
+        $dias_dretardo = sqlsrv_num_rows( $stmt2r );*/
 
         $dias_dec = ($dias_dretardo / 3);
         $dias_dretardos = intval($dias_dec); 
@@ -400,11 +409,11 @@ $i = 0;  ?>
         //$suma_infonavit+=$infonavit;
         //$suma_cahorro+=$cahorro;
 
-        $dias_trabajados_ttAsist2= $dias_trabajados_ttAsist - $dias_dretardos;
+        $dias_trabajados_ttAsist2= $dias_trabajados - $dias_dretardos;
 
         //echo $row_cnt;
         echo '<tr>';
-        echo '<td class="fijo" style="text-align: center; min-width: 60px; background-color:#fff;">';
+        echo '<td style="text-align: center; min-width: 60px; ">';
         if( $us_tt_promo_apellido1==='claus1') {
           echo "<a href=\"edit.php?id=$usuario[Id_usuario]\" class='fa fa-edit'></a> ";
         }
@@ -412,15 +421,15 @@ $i = 0;  ?>
         $temp='<input type="hidden" name="Id_usuario['.$i.']" value="'.$usuario['Id_usuario'].'">' ;   
         $temp2="";   
         $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
-        echo '<td class="fijo" style="text-align: center; min-width: 80px; background-color:#fff;">'.$NoEmpleado.$temp.' </td>'; //no empleado
+        echo '<td class="fijo" style="text-align: center; min-width: 80px; ">'.$NoEmpleado.$temp.' </td>'; //no empleado
        
         $temp='<input type="hidden" name="ucfdi['.$i.']" value="'.$usuario['ucfdi'].'">' ;   
         $temp2="";   
         $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
-        echo '<td class="fijo"  style="text-align: center; min-width: 250px; background-color:#fff; ">'.$us_nombre_real.$temp.' </td>';//nombre us
+        echo '<td class="fijo" style="text-align: center; min-width: 250px; background-color:#fff; ">'.$us_nombre_real.$temp.' </td>';//nombre us
 
-        echo '<td class="fijo" style="text-align: center; min-width: 80px; background-color:#fff;">'.$canal_descripcion.'</td>';//canal
-        echo '<td class="fijo" style="text-align: center; min-width: 120px; background-color:#fff;">'.$id_ruta.'</td>';//ruta
+        echo '<td style="text-align: center; min-width: 80px; ">'.$canal_descripcion.'</td>';//canal
+        echo '<td style="text-align: center; min-width: 120px; ">'.$id_ruta.'</td>';//ruta
         echo '<td style="text-align: center; min-width: 150px;">'.$puesto_descripcion.'</td>';//puesto
         echo '<td style="text-align: center; min-width: 110px;">'.$estatus.'</td>';//estado
         echo '<td style="text-align: center; min-width: 100px;">'.$fecha_alta_us.'</td>'; 
@@ -434,8 +443,8 @@ $i = 0;  ?>
         $script.='cambiar+=\'#sep#'.$temp.'\'; por+=\'#sep#'.$temp2.'\';';
         echo '<td style="text-align: center; min-width: 100px;" >'.$temp.'</td>';//dias trabajados
         ?>
-        <td style="text-align: center; min-width: 90px;"><?php echo number_format((($dias_trabajados_ttAsist)*(1/6)), 2, ".", ","); ?></td> 
-        <td style="text-align: center; min-width: 90px;"><?php echo ($diaob - $dias_trabajados_ttAsist - $dias_dvac1) ; ?> </td>
+        <td style="text-align: center; min-width: 90px;"><?php echo number_format((($dias_trabajados)*(1/6)), 2, ".", ","); ?></td> 
+        <td style="text-align: center; min-width: 90px;"><?php echo ($diaob - $dias_trabajados - $dias_dvac1) ; ?> </td>
         <td style="text-align: center; min-width: 100px;"><?php echo ($dias_dretardos) ; ?> </td>
         <td style="text-align: center; min-width: 100px;"><?php echo ($dias_dvac1) ; ?> </td> 
         <td style="text-align: center; min-width: 100px;"><?php echo number_format((($dias_dvac1)*(1/6)), 2, ".", ","); ?> </td> 
@@ -567,18 +576,18 @@ $i = 0;  ?>
   'height': '100%'
   });*/
 
-  $(document).ready(function(){
+  /*$(document).ready(function(){
 
     $(".fijo").each(function(){
   
       $(this).css("position","sticky").css("left",$(this).position().left);
     });
 
-    /*$('html, body').css({
+    $('html, body').css({
       'overflow': 'visible',
       'height': 'auto'
-    });*/
-  });
+    });
+  });*/
 </script>
 <!-----------------------------------------------------------------------------------------------------------------------------------------------------> 
 <?php include "footer.php"; 
